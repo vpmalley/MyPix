@@ -1,5 +1,9 @@
 package fr.vpm.mypix.album;
 
+import android.content.ContentUris;
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import java.util.Date;
 
 /**
@@ -7,14 +11,25 @@ import java.util.Date;
  */
 
 public class Picture {
+
+  private final long id;
   private final String path;
   private final String displayName;
   private final Date additionDate;
 
-  public Picture(String path, String displayName, Date additionDate) {
+  public Picture(long id, String path, String displayName, Date additionDate) {
+    this.id = id;
     this.path = path;
     this.displayName = displayName;
     this.additionDate = additionDate;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public Uri getUri() {
+    return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
   }
 
   public String getPath() {

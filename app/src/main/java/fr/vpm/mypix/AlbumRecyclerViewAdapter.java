@@ -7,11 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.Picture;
 
 /**
  * Created by vince on 26/02/18.
@@ -52,7 +57,7 @@ public class AlbumRecyclerViewAdapter
     mTwoPane = twoPane;
   }
 
-  public void setAlbums(List<Album> mValues) {
+  void setAlbums(List<Album> mValues) {
     this.mValues = mValues;
   }
 
@@ -65,11 +70,16 @@ public class AlbumRecyclerViewAdapter
 
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
-    holder.mIdView.setText(mValues.get(position).getId());
-    holder.mContentView.setText(mValues.get(position).getName());
-
+    holder.albumNameView.setText(mValues.get(position).getName());
+    if (!mValues.get(position).getPictures().isEmpty()) {
+      Picture firstPicture = mValues.get(position).getPictures().get(0);
+      Glide.with(holder.albumPictureView)
+          .load(firstPicture.getUri())
+          .apply(RequestOptions.centerCropTransform())
+          .into(holder.albumPictureView);
+    }
     holder.itemView.setTag(mValues.get(position));
-    holder.itemView.setOnClickListener(mOnClickListener);
+    //holder.itemView.setOnClickListener(mOnClickListener);
   }
 
   @Override
@@ -78,13 +88,13 @@ public class AlbumRecyclerViewAdapter
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {
-    final TextView mIdView;
-    final TextView mContentView;
+    final TextView albumNameView;
+    final ImageView albumPictureView;
 
     ViewHolder(View view) {
       super(view);
-      mIdView = (TextView) view.findViewById(R.id.id_text);
-      mContentView = (TextView) view.findViewById(R.id.name);
+      albumNameView = view.findViewById(R.id.album_name);
+      albumPictureView = view.findViewById(R.id.album_picture);
     }
   }
 }

@@ -24,19 +24,18 @@ import static android.provider.MediaStore.MediaColumns.TITLE;
  * Created by vince on 25/02/18.
  */
 
-public class AlbumsPresenter {
+class AlbumsPresenter {
 
-  public void loadAlbums(Context context) {
+  void loadAlbums(Context context) {
 
     final Map<String, Album> albums = new HashMap<>();
-    Cursor localAlbums = context.getContentResolver().query(
+    try (Cursor localAlbums = context.getContentResolver().query(
         EXTERNAL_CONTENT_URI,
         new String[]{_ID, DISPLAY_NAME, BUCKET_ID, BUCKET_DISPLAY_NAME, DATA, TITLE, DATE_ADDED},
         null,
         new String[0],
         null
-    );
-    try {
+    )) {
       if (localAlbums != null) {
         Album currentAlbum = null;
         if (localAlbums.moveToFirst()) {
@@ -47,16 +46,15 @@ public class AlbumsPresenter {
               currentAlbum = new Album(bucketId, bucketName, null);
               albums.put(bucketId, currentAlbum);
             }
+            long pictureId = localAlbums.getLong(localAlbums.getColumnIndex(_ID));
             String fileName = localAlbums.getString(localAlbums.getColumnIndex(DATA));
             String displayName = localAlbums.getString(localAlbums.getColumnIndex(DISPLAY_NAME));
             String dateAdded = localAlbums.getString(localAlbums.getColumnIndex(DATE_ADDED));
-            final Picture picture = new Picture(fileName, displayName, new Date(Long.parseLong(dateAdded)));
+            final Picture picture = new Picture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
             albums.get(bucketId).addPicture(picture);
           }
         }
       }
-    } finally {
-      localAlbums.close();
     }
     ((AlbumListActivity) context).onAlbumsLoaded(new ArrayList<>(albums.values()));
   }
