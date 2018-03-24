@@ -1,4 +1,4 @@
-package fr.vpm.mypix;
+package fr.vpm.mypix.local;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fr.vpm.mypix.album.Album;
@@ -24,7 +25,7 @@ import static android.provider.MediaStore.MediaColumns.TITLE;
 public class LocalAlbumsRetriever {
 
   @NonNull
-  public ArrayList<Album> getLocalAlbums(Context context) {
+  public List<Album> getLocalAlbums(Context context) {
     final Map<String, Album> albumsById = new HashMap<>();
     try (Cursor localAlbums = context.getContentResolver().query(
         EXTERNAL_CONTENT_URI,

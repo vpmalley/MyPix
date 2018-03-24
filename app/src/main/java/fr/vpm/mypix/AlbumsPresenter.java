@@ -2,9 +2,10 @@ package fr.vpm.mypix;
 
 import android.content.Context;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.local.LocalAlbumsRetriever;
 
 class AlbumsPresenter {
 
@@ -16,7 +17,7 @@ class AlbumsPresenter {
 
   void loadAlbums(Context context) {
 
-    ArrayList<Album> albums = localAlbumsRetriever.getLocalAlbums(context);
+    List<Album> albums = localAlbumsRetriever.getLocalAlbums(context);
     ((AlbumListActivity) context).onAlbumsLoaded(albums);
   }
 }
