@@ -26,7 +26,6 @@ public class LocalAlbumsRetriever {
 
   @NonNull
   public List<Album> getLocalAlbums(Context context) {
-    final Map<String, Album> albumsById = new HashMap<>();
     try (Cursor localAlbums = context.getContentResolver().query(
         EXTERNAL_CONTENT_URI,
         new String[]{_ID, DISPLAY_NAME, BUCKET_ID, BUCKET_DISPLAY_NAME, DATA, TITLE, DATE_ADDED},
@@ -35,26 +34,33 @@ public class LocalAlbumsRetriever {
         null
     )) {
       if (localAlbums != null) {
-        Album currentAlbum = null;
-        if (localAlbums.moveToFirst()) {
-          while (localAlbums.moveToNext()) {
-            String bucketId = localAlbums.getString(localAlbums.getColumnIndex(BUCKET_ID));
-            String bucketName = localAlbums.getString(localAlbums.getColumnIndex(BUCKET_DISPLAY_NAME));
-            if (currentAlbum == null || !albumsById.containsKey(bucketId)) {
-              currentAlbum = new Album(bucketId, bucketName, null);
-              albumsById.put(bucketId, currentAlbum);
-            }
-            long pictureId = localAlbums.getLong(localAlbums.getColumnIndex(_ID));
-            String fileName = localAlbums.getString(localAlbums.getColumnIndex(DATA));
-            String displayName = localAlbums.getString(localAlbums.getColumnIndex(DISPLAY_NAME));
-            String dateAdded = localAlbums.getString(localAlbums.getColumnIndex(DATE_ADDED));
-            final Picture picture = new Picture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
-            albumsById.get(bucketId).addPicture(picture);
-          }
-        }
+        final Map<String, Album> albumsById = mapAlbums(localAlbums);
+        return new ArrayList<>(albumsById.values());
       }
     }
-    return new ArrayList<>(albumsById.values());
+    return new ArrayList<>();
+  }
+
+  private Map<String, Album> mapAlbums(Cursor localAlbums) {
+    final Map<String, Album> albumsById = new HashMap<>();
+    Album currentAlbum = null;
+    if (localAlbums.moveToFirst()) {
+      while (localAlbums.moveToNext()) {
+        String bucketId = localAlbums.getString(localAlbums.getColumnIndex(BUCKET_ID));
+        String bucketName = localAlbums.getString(localAlbums.getColumnIndex(BUCKET_DISPLAY_NAME));
+        if (currentAlbum == null || !albumsById.containsKey(bucketId)) {
+          currentAlbum = new Album(bucketId, bucketName, null);
+          albumsById.put(bucketId, currentAlbum);
+        }
+        long pictureId = localAlbums.getLong(localAlbums.getColumnIndex(_ID));
+        String fileName = localAlbums.getString(localAlbums.getColumnIndex(DATA));
+        String displayName = localAlbums.getString(localAlbums.getColumnIndex(DISPLAY_NAME));
+        String dateAdded = localAlbums.getString(localAlbums.getColumnIndex(DATE_ADDED));
+        final Picture picture = new Picture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
+        albumsById.get(bucketId).addPicture(picture);
+      }
+    }
+    return albumsById;
   }
 
 

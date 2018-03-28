@@ -23,6 +23,16 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class FlickrAlbumsRetriever {
 
+  @NonNull
+  private static ArrayList<Album> mapAlbums(List<Photoset> photosets) {
+    ArrayList<Album> albums = new ArrayList<>();
+    for (Photoset photoset : photosets) {
+      Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content());
+      albums.add(album);
+    }
+    return albums;
+  }
+
   public void getFlickrAlbums(final AlbumsPresenter albumsPresenter) {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.flickr.com/")
@@ -32,7 +42,6 @@ public class FlickrAlbumsRetriever {
     FlickrPhotosetsService service = retrofit.create(FlickrPhotosetsService.class);
     service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(albumsPresenter));
   }
-
 
   private static class FlickrPhotosetsCallback implements Callback<FlickrPhotosets> {
 
@@ -45,16 +54,9 @@ public class FlickrAlbumsRetriever {
     @Override
     public void onResponse(@NonNull Call<FlickrPhotosets> call, @NonNull Response<FlickrPhotosets> response) {
       Log.d(FlickrAlbumsRetriever.class.getSimpleName(), "retrieved photosets");
-
       FlickrPhotosets body = response.body();
-      List<Photoset> photosets = body.getPhotosets().getPhotoset();
-
-      ArrayList<Album> albums = new ArrayList<>();
-      for (Photoset photoset : photosets) {
-        Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content());
-        albums.add(album);
-      }
-
+      List<Photoset> photosets = body != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
+      ArrayList<Album> albums = mapAlbums(photosets);
       albumsPresenter.onAlbumsRetrieved(albums);
     }
 
