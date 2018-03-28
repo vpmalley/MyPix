@@ -2,10 +2,8 @@ package fr.vpm.mypix.album;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * A dummy item representing a piece of name.
- */
 public class Album {
   private final String id;
   private final String name;
@@ -37,6 +35,19 @@ public class Album {
 
   public void addPicture(final Picture picture) {
     pictures.add(picture);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Album album = (Album) o;
+    return Objects.equals(name, album.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
   }
 
   @Override
