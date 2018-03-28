@@ -4,9 +4,12 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.vpm.mypix.AlbumsPresenter;
+import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.flickr.beans.FlickrPhotosets;
+import fr.vpm.mypix.flickr.beans.Photoset;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetsService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +45,17 @@ public class FlickrAlbumsRetriever {
     @Override
     public void onResponse(@NonNull Call<FlickrPhotosets> call, @NonNull Response<FlickrPhotosets> response) {
       Log.d(FlickrAlbumsRetriever.class.getSimpleName(), "retrieved photosets");
-      albumsPresenter.onAlbumsRetrieved(new ArrayList<>());
+
+      FlickrPhotosets body = response.body();
+      List<Photoset> photosets = body.getPhotosets().getPhotoset();
+
+      ArrayList<Album> albums = new ArrayList<>();
+      for (Photoset photoset : photosets) {
+        Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content());
+        albums.add(album);
+      }
+
+      albumsPresenter.onAlbumsRetrieved(albums);
     }
 
     @Override

@@ -3,7 +3,7 @@ package fr.vpm.mypix.flickr.beans;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Photoset {
+public class Photoset {
   private String date_update;
   private int visibility_can_see_set;
   private Description description;

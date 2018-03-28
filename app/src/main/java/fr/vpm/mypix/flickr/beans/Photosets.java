@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Photosets {
+public class Photosets {
   private int total;
   private int perpage;
   private List<Photoset> photoset;

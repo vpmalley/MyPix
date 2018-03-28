@@ -1,6 +1,6 @@
 package fr.vpm.mypix.flickr.beans;
 
-class Title {
+public class Title {
   private String _content;
 
   public String get_content() {
