@@ -77,6 +77,11 @@ public class AlbumRecyclerViewAdapter
           .load(firstPicture.getUri())
           .apply(RequestOptions.centerCropTransform())
           .into(holder.albumPictureView);
+    } else {
+      Glide.with(holder.albumPictureView)
+          .load(R.drawable.ic_photo_album_black_24dp)
+          .apply(RequestOptions.centerInsideTransform())
+          .into(holder.albumPictureView);
     }
     holder.itemView.setTag(mValues.get(position));
     //holder.itemView.setOnClickListener(mOnClickListener);
