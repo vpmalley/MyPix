@@ -15,13 +15,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * Created by vince on 24/03/18.
  */
 
 public class FlickrAlbumsRetriever {
+
+  private final Retrofit flickrRetrofit;
+
+  public FlickrAlbumsRetriever(Retrofit flickrRetrofit) {
+    this.flickrRetrofit = flickrRetrofit;
+  }
 
   @NonNull
   private static ArrayList<Album> mapAlbums(List<Photoset> photosets) {
@@ -34,12 +39,7 @@ public class FlickrAlbumsRetriever {
   }
 
   public void getFlickrAlbums(final AlbumsPresenter albumsPresenter) {
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl("https://api.flickr.com/")
-        .addConverterFactory(JacksonConverterFactory.create())
-        .build();
-
-    FlickrPhotosetsService service = retrofit.create(FlickrPhotosetsService.class);
+    FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
     service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(albumsPresenter));
   }
 

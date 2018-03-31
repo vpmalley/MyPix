@@ -9,7 +9,9 @@ import java.util.Set;
 
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.flickr.FlickrAlbumsRetriever;
+import fr.vpm.mypix.flickr.services.FlickrRetrofit;
 import fr.vpm.mypix.local.LocalAlbumsRetriever;
+import retrofit2.Retrofit;
 
 public class AlbumsPresenter {
 
@@ -18,9 +20,10 @@ public class AlbumsPresenter {
   private Set<Album> allAlbums = new HashSet<>();
   private Context context;
 
-  public AlbumsPresenter() {
+  public AlbumsPresenter(final Context context) {
     localAlbumsRetriever = new LocalAlbumsRetriever();
-    flickrAlbumsRetriever = new FlickrAlbumsRetriever();
+    Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(context);
+    flickrAlbumsRetriever = new FlickrAlbumsRetriever(flickrRetrofit);
   }
 
   void loadAlbums(Context context) {

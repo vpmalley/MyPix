@@ -24,7 +24,7 @@ import fr.vpm.mypix.album.MediaContent;
  */
 public class AlbumListActivity extends AppCompatActivity {
 
-  private final AlbumsPresenter albumsPresenter = new AlbumsPresenter();
+  private AlbumsPresenter albumsPresenter;
   /**
    * Whether or not the activity is in two-pane mode, i.e. running on a tablet
    * device.
@@ -36,7 +36,7 @@ public class AlbumListActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_item_list);
-
+    albumsPresenter = new AlbumsPresenter(this);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     toolbar.setTitle(getTitle());

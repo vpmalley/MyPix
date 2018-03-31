@@ -10,6 +10,6 @@ import retrofit2.http.Query;
  */
 
 public interface FlickrPhotosetsService {
-  @GET("services/rest/?method=flickr.photosets.getList&api_key=&format=json&nojsoncallback=1")
+  @GET("?method=flickr.photosets.getList")
   Call<FlickrPhotosets> listAlbums(@Query("user_id") String userId);
 }
