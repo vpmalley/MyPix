@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.vpm.mypix.album.Album;
-import fr.vpm.mypix.album.Picture;
+import fr.vpm.mypix.album.LocalPicture;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME;
@@ -56,8 +56,8 @@ public class LocalAlbumsRetriever {
         String fileName = localAlbums.getString(localAlbums.getColumnIndex(DATA));
         String displayName = localAlbums.getString(localAlbums.getColumnIndex(DISPLAY_NAME));
         String dateAdded = localAlbums.getString(localAlbums.getColumnIndex(DATE_ADDED));
-        final Picture picture = new Picture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
-        albumsById.get(bucketId).addPicture(picture);
+        final LocalPicture localPicture = new LocalPicture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
+        albumsById.get(bucketId).addPicture(localPicture);
       }
     }
     return albumsById;

@@ -8,13 +8,13 @@ public class Album {
   private final String id;
   private final String name;
   private final String details;
-  private final List<Picture> pictures;
+  private final List<LocalPicture> localPictures;
 
   public Album(String id, String name, String details) {
     this.id = id;
     this.name = name;
     this.details = details;
-    this.pictures = new ArrayList<>();
+    this.localPictures = new ArrayList<>();
   }
 
   public String getId() {
@@ -29,12 +29,12 @@ public class Album {
     return details;
   }
 
-  public List<Picture> getPictures() {
-    return pictures;
+  public List<LocalPicture> getLocalPictures() {
+    return localPictures;
   }
 
-  public void addPicture(final Picture picture) {
-    pictures.add(picture);
+  public void addPicture(final LocalPicture localPicture) {
+    localPictures.add(localPicture);
   }
 
   @Override

@@ -10,14 +10,14 @@ import java.util.Date;
  * Created by vince on 26/02/18.
  */
 
-public class Picture {
+public class LocalPicture {
 
   private final long id;
   private final String path;
   private final String displayName;
   private final Date additionDate;
 
-  public Picture(long id, String path, String displayName, Date additionDate) {
+  public LocalPicture(long id, String path, String displayName, Date additionDate) {
     this.id = id;
     this.path = path;
     this.displayName = displayName;
