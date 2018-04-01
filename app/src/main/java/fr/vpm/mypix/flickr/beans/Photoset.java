@@ -20,6 +20,7 @@ public class Photoset {
   private String count_views;
   private int can_comment;
   private String id;
+  private PrimaryPhotoExtras primary_photo_extras;
 
   public String getDate_update() {
     return date_update;
@@ -83,5 +84,9 @@ public class Photoset {
 
   public String getId() {
     return id;
+  }
+
+  public PrimaryPhotoExtras getPrimary_photo_extras() {
+    return primary_photo_extras;
   }
 }
