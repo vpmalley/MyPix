@@ -4,7 +4,7 @@ package fr.vpm.mypix.album;
  * Created by vince on 31/03/18.
  */
 
-public class FlickrPicture {
+public class FlickrPicture implements PictureWithUrl {
 
   private final String urlSmall;
   private final String urlOriginal;
@@ -26,5 +26,10 @@ public class FlickrPicture {
 
   public String getDisplayName() {
     return displayName;
+  }
+
+  @Override
+  public String getUrl() {
+    return urlSmall;
   }
 }

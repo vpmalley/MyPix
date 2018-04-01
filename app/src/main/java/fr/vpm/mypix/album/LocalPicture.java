@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by vince on 26/02/18.
  */
 
-public class LocalPicture {
+public class LocalPicture implements PictureWithUri {
 
   private final long id;
   private final String path;
