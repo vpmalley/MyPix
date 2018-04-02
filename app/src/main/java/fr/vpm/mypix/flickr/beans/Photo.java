@@ -7,18 +7,22 @@ public class Photo {
 
   private int isfamily;
   private String width_o;
+  private String width_m;
+  private String width_s;
   private String height_o;
+  private String height_m;
+  private String height_s;
   private String title;
   private int farm;
   private int ispublic;
   private String url_s;
-  private String server;
+  private String url_m;
   private String url_o;
+  private String server;
   private int isfriend;
   private String secret;
-  private String height_s;
+  private int isprimary;
   private String owner;
-  private String width_s;
   private String id;
 
   public int getIsfamily() {
@@ -29,8 +33,24 @@ public class Photo {
     return width_o;
   }
 
+  public String getWidth_m() {
+    return width_m;
+  }
+
+  public String getWidth_s() {
+    return width_s;
+  }
+
   public String getHeight_o() {
     return height_o;
+  }
+
+  public String getHeight_m() {
+    return height_m;
+  }
+
+  public String getHeight_s() {
+    return height_s;
   }
 
   public String getTitle() {
@@ -49,12 +69,16 @@ public class Photo {
     return url_s;
   }
 
-  public String getServer() {
-    return server;
+  public String getUrl_m() {
+    return url_m;
   }
 
   public String getUrl_o() {
     return url_o;
+  }
+
+  public String getServer() {
+    return server;
   }
 
   public int getIsfriend() {
@@ -65,16 +89,12 @@ public class Photo {
     return secret;
   }
 
-  public String getHeight_s() {
-    return height_s;
+  public int getIsprimary() {
+    return isprimary;
   }
 
   public String getOwner() {
     return owner;
-  }
-
-  public String getWidth_s() {
-    return width_s;
   }
 
   public String getId() {
