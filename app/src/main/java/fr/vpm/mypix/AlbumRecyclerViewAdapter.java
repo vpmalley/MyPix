@@ -28,13 +28,14 @@ public class AlbumRecyclerViewAdapter
 
   private final AlbumListActivity mParentActivity;
   private final boolean mTwoPane;
-  private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+  private final View.OnClickListener mOnAlbumCardClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-      Album item = (Album) view.getTag();
+      Album album = (Album) view.getTag();
       if (mTwoPane) {
         Bundle arguments = new Bundle();
-        arguments.putString(AlbumFragment.ARG_ITEM_ID, item.getId());
+        arguments.putString(AlbumFragment.ARG_ALBUM_ID, album.getId());
+        arguments.putSerializable(AlbumFragment.ARG_ALBUM_SOURCE, album.getSource());
         AlbumFragment fragment = new AlbumFragment();
         fragment.setArguments(arguments);
         mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -43,8 +44,8 @@ public class AlbumRecyclerViewAdapter
       } else {
         Context context = view.getContext();
         Intent intent = new Intent(context, AlbumActivity.class);
-        intent.putExtra(AlbumFragment.ARG_ITEM_ID, item.getId());
-
+        intent.putExtra(AlbumFragment.ARG_ALBUM_ID, album.getId());
+        intent.putExtra(AlbumFragment.ARG_ALBUM_SOURCE, album.getSource());
         context.startActivity(intent);
       }
     }
@@ -93,7 +94,7 @@ public class AlbumRecyclerViewAdapter
           .into(holder.albumPictureView);
     }
     holder.itemView.setTag(mValues.get(position));
-    //holder.itemView.setOnClickListener(mOnClickListener);
+    holder.itemView.setOnClickListener(mOnAlbumCardClickListener);
   }
 
   @Override

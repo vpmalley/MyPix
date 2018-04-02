@@ -31,7 +31,7 @@ public class FlickrAlbumRetriever {
 
   @NonNull
   private static Album mapAlbum(SinglePhotoset photoset) {
-    final Album album = new Album(photoset.getId(), photoset.getTitle(), photoset.getTitle());
+    final Album album = new Album(photoset.getId(), photoset.getTitle(), photoset.getTitle(), Album.Source.FLICKR);
     for (Photo photo : photoset.getPhoto()) {
       album.addPicture(new FlickrPicture(photo.getUrl_m(), photo.getUrl_o(), photo.getTitle()));
     }

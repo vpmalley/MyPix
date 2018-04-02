@@ -49,7 +49,7 @@ public class LocalAlbumsRetriever {
         String bucketId = localAlbums.getString(localAlbums.getColumnIndex(BUCKET_ID));
         String bucketName = localAlbums.getString(localAlbums.getColumnIndex(BUCKET_DISPLAY_NAME));
         if (currentAlbum == null || !albumsById.containsKey(bucketId)) {
-          currentAlbum = new Album(bucketId, bucketName, null);
+          currentAlbum = new Album(bucketId, bucketName, null, Album.Source.LOCAL);
           albumsById.put(bucketId, currentAlbum);
         }
         long pictureId = localAlbums.getLong(localAlbums.getColumnIndex(_ID));

@@ -5,16 +5,24 @@ import java.util.List;
 import java.util.Objects;
 
 public class Album {
+
+  private final Source source;
+
   private final String id;
   private final String name;
   private final String details;
   private final List<Picture> pictures;
 
-  public Album(String id, String name, String details) {
+  public Album(String id, String name, String details, Source source) {
     this.id = id;
     this.name = name;
     this.details = details;
+    this.source = source;
     this.pictures = new ArrayList<>();
+  }
+
+  public Source getSource() {
+    return source;
   }
 
   public String getId() {
@@ -31,6 +39,11 @@ public class Album {
 
   public List<Picture> getPictures() {
     return pictures;
+  }
+
+  public enum Source {
+    LOCAL,
+    FLICKR
   }
 
   public void addPicture(final Picture picture) {

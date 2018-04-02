@@ -38,7 +38,7 @@ public class MediaContent {
   }
 
   private static Album createDummyItem(int position) {
-    return new Album(String.valueOf(position), "Item " + position, makeDetails(position));
+    return new Album(String.valueOf(position), "Item " + position, makeDetails(position), Album.Source.LOCAL);
   }
 
   private static String makeDetails(int position) {

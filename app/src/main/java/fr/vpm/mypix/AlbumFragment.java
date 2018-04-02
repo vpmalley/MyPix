@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import fr.vpm.mypix.album.Album;
-import fr.vpm.mypix.album.MediaContent;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -23,12 +22,11 @@ public class AlbumFragment extends Fragment {
    * The fragment argument representing the item ID that this fragment
    * represents.
    */
-  public static final String ARG_ITEM_ID = "item_id";
+  public static final String ARG_ALBUM_ID = "album_id";
+  public static final String ARG_ALBUM_SOURCE = "album_source";
 
-  /**
-   * The dummy content this fragment is presenting.
-   */
-  private Album mItem;
+  private String albumId;
+  private Album.Source albumSource;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,16 +39,17 @@ public class AlbumFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (getArguments().containsKey(ARG_ITEM_ID)) {
+    if (getArguments().containsKey(ARG_ALBUM_ID)) {
       // Load the dummy content specified by the fragment
       // arguments. In a real-world scenario, use a Loader
       // to load content from a content provider.
-      mItem = MediaContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+      albumId = getArguments().getString(ARG_ALBUM_ID);
+      albumSource = (Album.Source) getArguments().getSerializable(ARG_ALBUM_SOURCE);
 
       Activity activity = this.getActivity();
       CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
       if (appBarLayout != null) {
-        appBarLayout.setTitle(mItem.getName());
+        appBarLayout.setTitle(albumSource.name());
       }
     }
   }
@@ -60,10 +59,8 @@ public class AlbumFragment extends Fragment {
                            Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.item_detail, container, false);
 
-    // Show the dummy content as text in a TextView.
-    if (mItem != null) {
-      ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.getDetails());
-    }
+    TextView mainLabel = rootView.findViewById(R.id.item_detail);
+    mainLabel.setText(albumId);
 
     return rootView;
   }

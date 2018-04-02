@@ -33,7 +33,7 @@ public class FlickrAlbumsRetriever {
   private static ArrayList<Album> mapAlbums(List<Photoset> photosets) {
     ArrayList<Album> albums = new ArrayList<>();
     for (Photoset photoset : photosets) {
-      Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content());
+      Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content(), Album.Source.FLICKR);
       album.addPicture(new FlickrPicture(photoset.getPrimary_photo_extras().getUrl_m(), photoset.getPrimary_photo_extras().getUrl_o(), photoset.getTitle().get_content()));
       albums.add(album);
     }
