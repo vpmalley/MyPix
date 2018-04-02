@@ -51,13 +51,14 @@ public class LocalAlbumsRetriever {
         if (currentAlbum == null || !albumsById.containsKey(bucketId)) {
           currentAlbum = new Album(bucketId, bucketName, null, Album.Source.LOCAL);
           albumsById.put(bucketId, currentAlbum);
+          // extract first picture
+          long pictureId = localAlbums.getLong(localAlbums.getColumnIndex(_ID));
+          String fileName = localAlbums.getString(localAlbums.getColumnIndex(DATA));
+          String displayName = localAlbums.getString(localAlbums.getColumnIndex(DISPLAY_NAME));
+          String dateAdded = localAlbums.getString(localAlbums.getColumnIndex(DATE_ADDED));
+          final LocalPicture localPicture = new LocalPicture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
+          albumsById.get(bucketId).addPicture(localPicture);
         }
-        long pictureId = localAlbums.getLong(localAlbums.getColumnIndex(_ID));
-        String fileName = localAlbums.getString(localAlbums.getColumnIndex(DATA));
-        String displayName = localAlbums.getString(localAlbums.getColumnIndex(DISPLAY_NAME));
-        String dateAdded = localAlbums.getString(localAlbums.getColumnIndex(DATE_ADDED));
-        final LocalPicture localPicture = new LocalPicture(pictureId, fileName, displayName, new Date(Long.parseLong(dateAdded)));
-        albumsById.get(bucketId).addPicture(localPicture);
       }
     }
     return albumsById;
