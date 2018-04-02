@@ -8,6 +8,7 @@ import java.util.List;
 
 import fr.vpm.mypix.AlbumsPresenter;
 import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.FlickrPicture;
 import fr.vpm.mypix.flickr.beans.FlickrPhotosets;
 import fr.vpm.mypix.flickr.beans.Photoset;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetsService;
@@ -33,6 +34,7 @@ public class FlickrAlbumsRetriever {
     ArrayList<Album> albums = new ArrayList<>();
     for (Photoset photoset : photosets) {
       Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content());
+      album.addPicture(new FlickrPicture(photoset.getPrimary_photo_extras().getUrl_m(), photoset.getPrimary_photo_extras().getUrl_o(), photoset.getTitle().get_content()));
       albums.add(album);
     }
     return albums;

@@ -16,7 +16,9 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.List;
 
 import fr.vpm.mypix.album.Album;
-import fr.vpm.mypix.album.LocalPicture;
+import fr.vpm.mypix.album.Picture;
+import fr.vpm.mypix.album.PictureWithUri;
+import fr.vpm.mypix.album.PictureWithUrl;
 
 /**
  * Created by vince on 26/02/18.
@@ -71,12 +73,19 @@ public class AlbumRecyclerViewAdapter
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.albumNameView.setText(mValues.get(position).getName());
-    if (!mValues.get(position).getLocalPictures().isEmpty()) {
-      LocalPicture firstPicture = mValues.get(position).getLocalPictures().get(0);
-      Glide.with(holder.albumPictureView)
-          .load(firstPicture.getUri())
-          .apply(RequestOptions.centerCropTransform())
-          .into(holder.albumPictureView);
+    if (!mValues.get(position).getPictures().isEmpty()) {
+      Picture firstPicture = mValues.get(position).getPictures().get(0);
+      if (firstPicture instanceof PictureWithUri) {
+        Glide.with(holder.albumPictureView)
+            .load(((PictureWithUri) firstPicture).getUri())
+            .apply(RequestOptions.centerCropTransform())
+            .into(holder.albumPictureView);
+      } else if (firstPicture instanceof PictureWithUrl) {
+        Glide.with(holder.albumPictureView)
+            .load(((PictureWithUrl) firstPicture).getUrl())
+            .apply(RequestOptions.centerCropTransform())
+            .into(holder.albumPictureView);
+      }
     } else {
       Glide.with(holder.albumPictureView)
           .load(R.drawable.ic_photo_album_black_24dp)
