@@ -3,9 +3,7 @@ package fr.vpm.mypix.flickr;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.Collections;
-
-import fr.vpm.mypix.AlbumsPresenter;
+import fr.vpm.mypix.AlbumFragment;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
 import fr.vpm.mypix.flickr.beans.FlickrPhotoset;
@@ -38,17 +36,17 @@ public class FlickrAlbumRetriever {
     return album;
   }
 
-  public void getFlickrAlbum(final AlbumsPresenter albumsPresenter, final String flickrAlbumId) {
+  public void getFlickrAlbum(final AlbumFragment albumFragment, final String flickrAlbumId) {
     FlickrPhotosetService service = flickrRetrofit.create(FlickrPhotosetService.class);
-    service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(albumsPresenter));
+    service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(albumFragment));
   }
 
   private static class FlickrPhotosetCallback implements Callback<FlickrPhotoset> {
 
-    private final AlbumsPresenter albumsPresenter;
+    private final AlbumFragment albumFragment;
 
-    FlickrPhotosetCallback(AlbumsPresenter albumsPresenter) {
-      this.albumsPresenter = albumsPresenter;
+    FlickrPhotosetCallback(AlbumFragment albumFragment) {
+      this.albumFragment = albumFragment;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class FlickrAlbumRetriever {
       FlickrPhotoset body = response.body();
       SinglePhotoset photoset = body != null ? body.getPhotoset() : null;
       Album album = mapAlbum(photoset);
-      albumsPresenter.onAlbumsRetrieved(Collections.singletonList(album));
+      albumFragment.onAlbumRetrieved(album);
     }
 
     @Override
