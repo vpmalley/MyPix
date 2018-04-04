@@ -7,12 +7,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.mypix.album.Album;
-import fr.vpm.mypix.album.MediaContent;
 
 /**
  * An activity representing a list of Items. This activity
@@ -41,14 +40,9 @@ public class AlbumListActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     toolbar.setTitle(getTitle());
 
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-    fab.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show();
-      }
-    });
+    FloatingActionButton fab = findViewById(R.id.fab);
+    fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        .setAction("Action", null).show());
 
     if (findViewById(R.id.item_detail_container) != null) {
       // The detail container view will be present only in the
@@ -64,7 +58,7 @@ public class AlbumListActivity extends AppCompatActivity {
   }
 
   private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-    recyclerView.setAdapter(new AlbumRecyclerViewAdapter(this, MediaContent.ITEMS, mTwoPane));
+    recyclerView.setAdapter(new AlbumRecyclerViewAdapter(this, new ArrayList<>(), mTwoPane));
   }
 
   public void onAlbumsLoaded(final List<Album> albums) {
