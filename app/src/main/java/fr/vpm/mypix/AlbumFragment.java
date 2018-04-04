@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class AlbumFragment extends Fragment {
   private Album.Source albumSource;
 
   private RecyclerView picturesRecyclerView;
+  private CollapsingToolbarLayout appBarLayout;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,33 +48,39 @@ public class AlbumFragment extends Fragment {
       albumSource = (Album.Source) getArguments().getSerializable(ARG_ALBUM_SOURCE);
 
       Activity activity = this.getActivity();
-      CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
-      if (appBarLayout != null) {
-        appBarLayout.setTitle(albumSource.name());
-      }
-      localAlbumRetriever = new LocalAlbumRetriever();
-      Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(getContext());
-      flickrAlbumRetriever = new FlickrAlbumRetriever(flickrRetrofit);
-
-      if (Album.Source.FLICKR == albumSource) {
-        flickrAlbumRetriever.getFlickrAlbum(this, albumId);
-      }
-      if (Album.Source.LOCAL == albumSource) {
-        localAlbumRetriever.getLocalAlbum(getContext(), this, albumId);
-      }
+      appBarLayout = activity.findViewById(R.id.toolbar_layout);
     }
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.item_detail, container, false);
     picturesRecyclerView = rootView.findViewById(R.id.item_detail);
+    picturesRecyclerView.setAdapter(new PicturesRecyclerViewAdapter());
+    picturesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+    loadAlbum();
     return rootView;
   }
 
+  private void loadAlbum() {
+    localAlbumRetriever = new LocalAlbumRetriever();
+    Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(getContext());
+    flickrAlbumRetriever = new FlickrAlbumRetriever(flickrRetrofit);
+    if (Album.Source.FLICKR == albumSource) {
+      flickrAlbumRetriever.getFlickrAlbum(this, albumId);
+    }
+    if (Album.Source.LOCAL == albumSource) {
+      localAlbumRetriever.getLocalAlbum(getContext(), this, albumId);
+    }
+  }
+
   public void onAlbumRetrieved(final Album album) {
-    // display the album in the recycler view
+    if (appBarLayout != null) {
+      appBarLayout.setTitle(album.getName());
+    }
+    PicturesRecyclerViewAdapter adapter = (PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter();
+    adapter.setPictures(album.getPictures());
+    adapter.notifyDataSetChanged();
   }
 
 }
