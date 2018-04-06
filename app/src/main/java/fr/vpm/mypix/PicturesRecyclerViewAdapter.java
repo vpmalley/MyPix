@@ -13,6 +13,8 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.vpm.mypix.album.FlickrPicture;
+import fr.vpm.mypix.album.LocalPicture;
 import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;
 import fr.vpm.mypix.album.PictureWithUrl;
@@ -53,6 +55,22 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
           .apply(RequestOptions.centerCropTransform())
           .into(holder.pictureDisplay);
     }
+    if (picture.getExtension().isEmpty()) {
+      holder.pictureExtension.setVisibility(View.INVISIBLE);
+    } else {
+      holder.pictureExtension.setVisibility(View.VISIBLE);
+      holder.pictureExtension.setText(picture.getExtension().toUpperCase());
+    }
+    if (picture instanceof FlickrPicture) {
+      holder.pictureSourceFlickr.setVisibility(View.VISIBLE);
+    } else {
+      holder.pictureSourceFlickr.setVisibility(View.GONE);
+    }
+    if (picture instanceof LocalPicture) {
+      holder.pictureSourceLocal.setVisibility(View.VISIBLE);
+    } else {
+      holder.pictureSourceLocal.setVisibility(View.GONE);
+    }
     holder.itemView.setTag(mPictures.get(position));
   }
 
@@ -64,11 +82,15 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
   class ViewHolder extends RecyclerView.ViewHolder {
     final ImageView pictureDisplay;
     final TextView pictureExtension;
+    final ImageView pictureSourceFlickr;
+    final ImageView pictureSourceLocal;
 
     ViewHolder(View view) {
       super(view);
       pictureDisplay = view.findViewById(R.id.picture_display);
       pictureExtension = view.findViewById(R.id.picture_extension);
+      pictureSourceFlickr = view.findViewById(R.id.picture_source_flickr);
+      pictureSourceLocal = view.findViewById(R.id.picture_source_local);
     }
   }
 }

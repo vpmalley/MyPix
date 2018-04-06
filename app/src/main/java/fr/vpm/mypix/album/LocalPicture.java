@@ -3,6 +3,7 @@ package fr.vpm.mypix.album;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 
 import java.util.Date;
 
@@ -42,5 +43,16 @@ public class LocalPicture implements PictureWithUri {
 
   public Date getAdditionDate() {
     return additionDate;
+  }
+
+  @NonNull
+  @Override
+  public String getExtension() {
+    int dotIndex = path.lastIndexOf('.');
+    if (dotIndex > -1 && dotIndex + 1 < path.length()) {
+      return path.substring(dotIndex + 1);
+    } else {
+      return "";
+    }
   }
 }

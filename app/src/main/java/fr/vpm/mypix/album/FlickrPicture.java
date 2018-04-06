@@ -1,5 +1,7 @@
 package fr.vpm.mypix.album;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by vince on 31/03/18.
  */
@@ -31,5 +33,16 @@ public class FlickrPicture implements PictureWithUrl {
   @Override
   public String getUrl() {
     return urlSmall;
+  }
+
+  @NonNull
+  @Override
+  public String getExtension() {
+    int dotIndex = urlOriginal.lastIndexOf('.');
+    if (dotIndex > -1 && dotIndex + 1 < urlOriginal.length()) {
+      return urlOriginal.substring(dotIndex + 1);
+    } else {
+      return "";
+    }
   }
 }
