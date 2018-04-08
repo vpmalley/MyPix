@@ -7,13 +7,13 @@
     android:layout_height="200dp"
     android:layout_gravity="center"
     android:layout_margin="10dp"
+    android:background="@android:color/darker_gray"
     card_view:cardCornerRadius="4dp">
 
     <ImageView
         android:id="@+id/album_picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"
         android:contentDescription="@string/album_picture"/>
 
     <TextView
