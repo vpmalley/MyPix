@@ -3,6 +3,7 @@ package fr.vpm.mypix;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.AlbumDisplay;
+import fr.vpm.mypix.album.ParcelableAlbum;
 import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;
 import fr.vpm.mypix.album.PictureWithUrl;
@@ -32,10 +36,10 @@ public class AlbumRecyclerViewAdapter
     @Override
     public void onClick(View view) {
       AlbumDisplay album = (AlbumDisplay) view.getTag();
+      ArrayList<ParcelableAlbum> albumsToPass = parcelAlbums(album);
       if (mTwoPane) {
         Bundle arguments = new Bundle();
-        arguments.putString(AlbumFragment.ARG_ALBUM_ID, album.getAlbums().get(0).getId());
-        arguments.putSerializable(AlbumFragment.ARG_ALBUM_SOURCE, album.getAlbums().get(0).getSource());
+        arguments.putParcelableArrayList(AlbumFragment.ARG_ALBUMS, albumsToPass);
         AlbumFragment fragment = new AlbumFragment();
         fragment.setArguments(arguments);
         mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -44,8 +48,7 @@ public class AlbumRecyclerViewAdapter
       } else {
         Context context = view.getContext();
         Intent intent = new Intent(context, AlbumActivity.class);
-        intent.putExtra(AlbumFragment.ARG_ALBUM_ID, album.getAlbums().get(0).getId());
-        intent.putExtra(AlbumFragment.ARG_ALBUM_SOURCE, album.getAlbums().get(0).getSource());
+        intent.putParcelableArrayListExtra(AlbumFragment.ARG_ALBUMS, albumsToPass);
         context.startActivity(intent);
       }
     }
@@ -58,6 +61,15 @@ public class AlbumRecyclerViewAdapter
     mValues = items;
     mParentActivity = parent;
     mTwoPane = twoPane;
+  }
+
+  @NonNull
+  private ArrayList<ParcelableAlbum> parcelAlbums(AlbumDisplay album) {
+    ArrayList<ParcelableAlbum> albumsToPass = new ArrayList<>();
+    for (Album albumToPass : album.getAlbums()) {
+      albumsToPass.add(new ParcelableAlbum(albumToPass.getSource(), albumToPass.getId()));
+    }
+    return albumsToPass;
   }
 
   void setAlbums(List<AlbumDisplay> mValues) {

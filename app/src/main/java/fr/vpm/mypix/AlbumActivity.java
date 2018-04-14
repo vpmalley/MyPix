@@ -53,10 +53,8 @@ public class AlbumActivity extends AppCompatActivity {
       // Create the detail fragment and add it to the activity
       // using a fragment transaction.
       Bundle arguments = new Bundle();
-      arguments.putString(AlbumFragment.ARG_ALBUM_ID,
-          getIntent().getStringExtra(AlbumFragment.ARG_ALBUM_ID));
-      arguments.putSerializable(AlbumFragment.ARG_ALBUM_SOURCE,
-          getIntent().getSerializableExtra(AlbumFragment.ARG_ALBUM_SOURCE));
+      arguments.putParcelableArrayList(AlbumFragment.ARG_ALBUMS,
+          getIntent().getParcelableArrayListExtra(AlbumFragment.ARG_ALBUMS));
       AlbumFragment fragment = new AlbumFragment();
       fragment.setArguments(arguments);
       getSupportFragmentManager().beginTransaction()

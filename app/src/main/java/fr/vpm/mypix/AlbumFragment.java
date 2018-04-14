@@ -10,7 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.ParcelableAlbum;
+import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.flickr.FlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrRetrofit;
 import fr.vpm.mypix.local.LocalAlbumRetriever;
@@ -18,16 +23,16 @@ import retrofit2.Retrofit;
 
 public class AlbumFragment extends Fragment {
 
-  public static final String ARG_ALBUM_ID = "album_id";
-  public static final String ARG_ALBUM_SOURCE = "album_source";
+  public static final String ARG_ALBUMS = "albums";
   private LocalAlbumRetriever localAlbumRetriever;
   private FlickrAlbumRetriever flickrAlbumRetriever;
 
-  private String albumId;
-  private Album.Source albumSource;
-
   private RecyclerView picturesRecyclerView;
   private CollapsingToolbarLayout appBarLayout;
+  private List<ParcelableAlbum> albums;
+  private List<Picture> allPictures = new ArrayList<>();
+  private List<Album> allAlbums = new ArrayList<>();
+
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -40,12 +45,8 @@ public class AlbumFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (getArguments().containsKey(ARG_ALBUM_ID)) {
-      // Load the dummy content specified by the fragment
-      // arguments. In a real-world scenario, use a Loader
-      // to load content from a content provider.
-      albumId = getArguments().getString(ARG_ALBUM_ID);
-      albumSource = (Album.Source) getArguments().getSerializable(ARG_ALBUM_SOURCE);
+    if (getArguments().containsKey(ARG_ALBUMS)) {
+      albums = getArguments().getParcelableArrayList(ARG_ALBUMS);
 
       Activity activity = this.getActivity();
       appBarLayout = activity.findViewById(R.id.toolbar_layout);
@@ -66,11 +67,13 @@ public class AlbumFragment extends Fragment {
     localAlbumRetriever = new LocalAlbumRetriever();
     Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(getContext());
     flickrAlbumRetriever = new FlickrAlbumRetriever(flickrRetrofit);
-    if (Album.Source.FLICKR == albumSource) {
-      flickrAlbumRetriever.getFlickrAlbum(this, albumId);
-    }
-    if (Album.Source.LOCAL == albumSource) {
-      localAlbumRetriever.getLocalAlbum(getContext(), this, albumId);
+    for (ParcelableAlbum album : albums) {
+      if (Album.Source.FLICKR == album.getSource()) {
+        flickrAlbumRetriever.getFlickrAlbum(this, album.getId());
+      }
+      if (Album.Source.LOCAL == album.getSource()) {
+        localAlbumRetriever.getLocalAlbum(getContext(), this, album.getId());
+      }
     }
   }
 
@@ -78,8 +81,10 @@ public class AlbumFragment extends Fragment {
     if (appBarLayout != null) {
       appBarLayout.setTitle(album.getName());
     }
+    allAlbums.add(album);
     PicturesRecyclerViewAdapter adapter = (PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter();
-    adapter.setPictures(album.getPictures());
+    allPictures.addAll(album.getPictures());
+    adapter.setPictures(allPictures);
     adapter.notifyDataSetChanged();
   }
 
