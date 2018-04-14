@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.AlbumDisplay;
 
 /**
  * An activity representing a list of Items. This activity
@@ -61,7 +61,7 @@ public class AlbumListActivity extends AppCompatActivity {
     recyclerView.setAdapter(new AlbumRecyclerViewAdapter(this, new ArrayList<>(), mTwoPane));
   }
 
-  public void onAlbumsLoaded(final List<Album> albums) {
+  public void onAlbumsLoaded(final List<AlbumDisplay> albums) {
     AlbumRecyclerViewAdapter adapter = (AlbumRecyclerViewAdapter) recyclerView.getAdapter();
     adapter.setAlbums(albums);
     adapter.notifyDataSetChanged();

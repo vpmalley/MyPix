@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.AlbumDisplay;
 import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;
 import fr.vpm.mypix.album.PictureWithUrl;
@@ -31,11 +31,11 @@ public class AlbumRecyclerViewAdapter
   private final View.OnClickListener mOnAlbumCardClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-      Album album = (Album) view.getTag();
+      AlbumDisplay album = (AlbumDisplay) view.getTag();
       if (mTwoPane) {
         Bundle arguments = new Bundle();
-        arguments.putString(AlbumFragment.ARG_ALBUM_ID, album.getId());
-        arguments.putSerializable(AlbumFragment.ARG_ALBUM_SOURCE, album.getSource());
+        arguments.putString(AlbumFragment.ARG_ALBUM_ID, album.getAlbums().get(0).getId());
+        arguments.putSerializable(AlbumFragment.ARG_ALBUM_SOURCE, album.getAlbums().get(0).getSource());
         AlbumFragment fragment = new AlbumFragment();
         fragment.setArguments(arguments);
         mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -44,23 +44,23 @@ public class AlbumRecyclerViewAdapter
       } else {
         Context context = view.getContext();
         Intent intent = new Intent(context, AlbumActivity.class);
-        intent.putExtra(AlbumFragment.ARG_ALBUM_ID, album.getId());
-        intent.putExtra(AlbumFragment.ARG_ALBUM_SOURCE, album.getSource());
+        intent.putExtra(AlbumFragment.ARG_ALBUM_ID, album.getAlbums().get(0).getId());
+        intent.putExtra(AlbumFragment.ARG_ALBUM_SOURCE, album.getAlbums().get(0).getSource());
         context.startActivity(intent);
       }
     }
   };
-  private List<Album> mValues;
+  private List<AlbumDisplay> mValues;
 
   AlbumRecyclerViewAdapter(AlbumListActivity parent,
-                           List<Album> items,
+                           List<AlbumDisplay> items,
                            boolean twoPane) {
     mValues = items;
     mParentActivity = parent;
     mTwoPane = twoPane;
   }
 
-  void setAlbums(List<Album> mValues) {
+  void setAlbums(List<AlbumDisplay> mValues) {
     this.mValues = mValues;
   }
 
@@ -74,16 +74,16 @@ public class AlbumRecyclerViewAdapter
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.albumNameView.setText(mValues.get(position).getName());
-    if (!mValues.get(position).getPictures().isEmpty()) {
-      Picture firstPicture = mValues.get(position).getPictures().get(0);
-      if (firstPicture instanceof PictureWithUri) {
+    if (mValues.get(position).getPicture() != null) {
+      Picture albumCover = mValues.get(position).getPicture();
+      if (albumCover instanceof PictureWithUri) {
         Glide.with(holder.albumPictureView)
-            .load(((PictureWithUri) firstPicture).getUri())
+            .load(((PictureWithUri) albumCover).getUri())
             .apply(RequestOptions.centerCropTransform())
             .into(holder.albumPictureView);
-      } else if (firstPicture instanceof PictureWithUrl) {
+      } else if (albumCover instanceof PictureWithUrl) {
         Glide.with(holder.albumPictureView)
-            .load(((PictureWithUrl) firstPicture).getUrl())
+            .load(((PictureWithUrl) albumCover).getUrl())
             .apply(RequestOptions.centerCropTransform())
             .into(holder.albumPictureView);
       }
