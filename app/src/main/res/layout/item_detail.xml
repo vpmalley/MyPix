@@ -9,4 +9,5 @@
                                         android:background="#ddd"
                                         app:layoutManager="android.support.v7.widget.GridLayoutManager"
                                         tools:context="fr.vpm.mypix.AlbumActivity"
+                                        android:paddingBottom="64dp"
                                         tools:listitem="@layout/item_list_content"/>
