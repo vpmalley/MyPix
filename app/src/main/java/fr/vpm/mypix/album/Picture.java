@@ -7,4 +7,5 @@ public interface Picture {
   @NonNull
   String getExtension();
 
+  String getFileName();
 }

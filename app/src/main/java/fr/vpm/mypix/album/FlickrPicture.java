@@ -45,4 +45,9 @@ public class FlickrPicture implements PictureWithUrl {
       return "";
     }
   }
+
+  @Override
+  public String getFileName() {
+    return displayName;
+  }
 }

@@ -55,4 +55,15 @@ public class LocalPicture implements PictureWithUri {
       return "";
     }
   }
+
+  @Override
+  public String getFileName() {
+    int slashIndex = path.lastIndexOf('/');
+    if (slashIndex > -1 && slashIndex + 1 < path.length()) {
+      int extensionLength = getExtension().isEmpty() ? 0 : getExtension().length() + 1;
+      return path.substring(slashIndex + 1, path.length() - extensionLength);
+    } else {
+      return displayName;
+    }
+  }
 }
