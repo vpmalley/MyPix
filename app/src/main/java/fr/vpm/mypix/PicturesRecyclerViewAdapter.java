@@ -1,5 +1,6 @@
 package fr.vpm.mypix;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,21 +20,28 @@ import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;
 import fr.vpm.mypix.album.PictureWithUrl;
 
-/**
- * Created by vince on 26/02/18.
- */
 public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.ViewHolder> {
 
+  private final SharePicturesWithDialog sharePicturesWithDialog;
+  private final View.OnClickListener mOnPictureClickListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      Picture picture = (Picture) view.getTag();
+      sharePicturesWithDialog.sharePicture(view, picture);
+    }
+  };
   private List<Picture> mPictures;
 
   PicturesRecyclerViewAdapter() {
     mPictures = new ArrayList<>();
+    sharePicturesWithDialog = new SharePicturesWithDialog();
   }
 
   void setPictures(List<Picture> pictures) {
     this.mPictures = pictures;
   }
 
+  @NonNull
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext())
@@ -72,6 +80,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
       holder.pictureSourceLocal.setVisibility(View.GONE);
     }
     holder.itemView.setTag(mPictures.get(position));
+    holder.itemView.setOnClickListener(mOnPictureClickListener);
   }
 
   @Override

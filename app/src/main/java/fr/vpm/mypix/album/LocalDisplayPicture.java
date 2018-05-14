@@ -33,6 +33,11 @@ public class LocalDisplayPicture implements PictureWithUri {
     return displayedPicture.getUri();
   }
 
+  @Override
+  public String getFileNameWithExtension() {
+    return displayedPicture.getFileNameWithExtension();
+  }
+
   @NonNull
   @Override
   public String getExtension() {

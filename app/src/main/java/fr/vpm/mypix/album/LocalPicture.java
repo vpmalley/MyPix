@@ -33,6 +33,11 @@ public class LocalPicture implements PictureWithUri {
     return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
   }
 
+  @Override
+  public String getFileNameWithExtension() {
+    return getFileName() + "." + getExtension();
+  }
+
   public String getPath() {
     return path;
   }
