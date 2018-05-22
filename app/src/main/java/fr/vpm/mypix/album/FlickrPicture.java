@@ -2,15 +2,20 @@ package fr.vpm.mypix.album;
 
 import android.support.annotation.NonNull;
 
+import io.realm.RealmObject;
+
 /**
  * Created by vince on 31/03/18.
  */
 
-public class FlickrPicture implements PictureWithUrl {
+public class FlickrPicture extends RealmObject implements PictureWithUrl {
 
-  private final String urlSmall;
-  private final String urlOriginal;
-  private final String displayName;
+  private String urlSmall;
+  private String urlOriginal;
+  private String displayName;
+
+  public FlickrPicture() {
+  }
 
   public FlickrPicture(String urlSmall, String urlOriginal, String displayName) {
     this.urlSmall = urlSmall;

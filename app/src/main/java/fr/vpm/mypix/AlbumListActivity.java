@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.mypix.album.AlbumDisplay;
+import io.realm.Realm;
 
 /**
  * An activity representing a list of Items. This activity
@@ -52,6 +53,7 @@ public class AlbumListActivity extends AppCompatActivity {
       mTwoPane = true;
     }
 
+    Realm.init(this);
     recyclerView = findViewById(R.id.item_list);
     setupRecyclerView(recyclerView);
     albumsPresenter.loadAlbums(this);
