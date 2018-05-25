@@ -9,11 +9,9 @@ import java.util.List;
 import fr.vpm.mypix.AlbumsPresenter;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
-import fr.vpm.mypix.album.RealmFlickrAlbum;
 import fr.vpm.mypix.flickr.beans.FlickrPhotosets;
 import fr.vpm.mypix.flickr.beans.Photoset;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetsService;
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,19 +40,6 @@ public class FlickrAlbumsRetriever {
     return albums;
   }
 
-  static void persistAlbums(ArrayList<Album> albums) {
-    ArrayList<RealmFlickrAlbum> realmAlbums = new ArrayList<>();
-    for (Album album : albums) {
-      realmAlbums.add(new RealmFlickrAlbum(album));
-    }
-
-    Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realm.delete(RealmFlickrAlbum.class);
-    realm.insert(realmAlbums);
-    realm.commitTransaction();
-  }
-
   public void getFlickrAlbums(final AlbumsPresenter albumsPresenter) {
     FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
     service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(albumsPresenter));
@@ -74,7 +59,6 @@ public class FlickrAlbumsRetriever {
       FlickrPhotosets body = response.body();
       List<Photoset> photosets = body != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
       ArrayList<Album> albums = mapAlbums(photosets);
-      persistAlbums(albums);
       albumsPresenter.onAlbumsRetrieved(albums);
     }
 
