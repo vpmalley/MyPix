@@ -6,12 +6,11 @@ import android.util.Log;
 import fr.vpm.mypix.AlbumFragment;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
-import fr.vpm.mypix.album.RealmFlickrAlbum;
 import fr.vpm.mypix.flickr.beans.FlickrPhotoset;
 import fr.vpm.mypix.flickr.beans.Photo;
 import fr.vpm.mypix.flickr.beans.SinglePhotoset;
+import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumPersister;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetService;
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,14 +37,6 @@ public class FlickrAlbumRetriever {
     return album;
   }
 
-  static void persistAlbum(Album album) {
-    RealmFlickrAlbum realmFlickrAlbum = new RealmFlickrAlbum(album);
-    Realm realm = Realm.getDefaultInstance();
-    realm.beginTransaction();
-    realm.insert(realmFlickrAlbum);
-    realm.commitTransaction();
-  }
-
   public void getFlickrAlbum(final AlbumFragment albumFragment, final String flickrAlbumId) {
     FlickrPhotosetService service = flickrRetrofit.create(FlickrPhotosetService.class);
     service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(albumFragment));
@@ -55,8 +46,11 @@ public class FlickrAlbumRetriever {
 
     private final AlbumFragment albumFragment;
 
+    private final RealmFlickrAlbumPersister realmFlickrAlbumPersister;
+
     FlickrPhotosetCallback(AlbumFragment albumFragment) {
       this.albumFragment = albumFragment;
+      realmFlickrAlbumPersister = new RealmFlickrAlbumPersister();
     }
 
     @Override
@@ -65,7 +59,7 @@ public class FlickrAlbumRetriever {
       FlickrPhotoset body = response.body();
       SinglePhotoset photoset = body != null ? body.getPhotoset() : null;
       Album album = mapAlbum(photoset);
-      persistAlbum(album);
+      realmFlickrAlbumPersister.persist(album);
       albumFragment.onAlbumRetrieved(album);
     }
 

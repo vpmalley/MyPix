@@ -1,5 +1,8 @@
-package fr.vpm.mypix.album;
+package fr.vpm.mypix.flickr.persistence;
 
+import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.FlickrPicture;
+import fr.vpm.mypix.album.Picture;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
