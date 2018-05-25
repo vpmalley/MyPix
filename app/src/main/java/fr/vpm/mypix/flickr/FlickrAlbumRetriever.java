@@ -10,6 +10,7 @@ import fr.vpm.mypix.flickr.beans.FlickrPhotoset;
 import fr.vpm.mypix.flickr.beans.Photo;
 import fr.vpm.mypix.flickr.beans.SinglePhotoset;
 import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumPersister;
+import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,8 +39,13 @@ public class FlickrAlbumRetriever {
   }
 
   public void getFlickrAlbum(final AlbumFragment albumFragment, final String flickrAlbumId) {
-    FlickrPhotosetService service = flickrRetrofit.create(FlickrPhotosetService.class);
-    service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(albumFragment));
+    Album album = new RealmFlickrAlbumRetriever().retrieveAlbum(flickrAlbumId);
+    if (album != null) {
+      albumFragment.onAlbumRetrieved(album);
+    } else {
+      FlickrPhotosetService service = flickrRetrofit.create(FlickrPhotosetService.class);
+      service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(albumFragment));
+    }
   }
 
   private static class FlickrPhotosetCallback implements Callback<FlickrPhotoset> {
