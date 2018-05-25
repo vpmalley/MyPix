@@ -11,7 +11,9 @@ import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
 import fr.vpm.mypix.flickr.beans.FlickrPhotosets;
 import fr.vpm.mypix.flickr.beans.Photoset;
+import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetsService;
+import fr.vpm.mypix.utils.Connection;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,8 +27,13 @@ public class FlickrAlbumsRetriever {
 
   private final Retrofit flickrRetrofit;
 
+  private final Connection connection;
+  private RealmFlickrAlbumRetriever realmFlickrAlbumRetriever;
+
   public FlickrAlbumsRetriever(Retrofit flickrRetrofit) {
     this.flickrRetrofit = flickrRetrofit;
+    this.connection = new Connection();
+    this.realmFlickrAlbumRetriever = new RealmFlickrAlbumRetriever();
   }
 
   @NonNull
@@ -41,8 +48,13 @@ public class FlickrAlbumsRetriever {
   }
 
   public void getFlickrAlbums(final AlbumsPresenter albumsPresenter) {
-    FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
-    service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(albumsPresenter));
+    if (connection.isOffline()) {
+      List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
+      albumsPresenter.onAlbumsRetrieved(albums);
+    } else {
+      FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
+      service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(albumsPresenter));
+    }
   }
 
   private static class FlickrPhotosetsCallback implements Callback<FlickrPhotosets> {

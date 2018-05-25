@@ -24,9 +24,11 @@ import retrofit2.Retrofit;
 public class FlickrAlbumRetriever {
 
   private final Retrofit flickrRetrofit;
+  private RealmFlickrAlbumRetriever realmFlickrAlbumRetriever;
 
   public FlickrAlbumRetriever(Retrofit flickrRetrofit) {
     this.flickrRetrofit = flickrRetrofit;
+    this.realmFlickrAlbumRetriever = new RealmFlickrAlbumRetriever();
   }
 
   @NonNull
@@ -39,7 +41,7 @@ public class FlickrAlbumRetriever {
   }
 
   public void getFlickrAlbum(final AlbumFragment albumFragment, final String flickrAlbumId) {
-    Album album = new RealmFlickrAlbumRetriever().retrieveAlbum(flickrAlbumId);
+    Album album = realmFlickrAlbumRetriever.retrieveAlbum(flickrAlbumId);
     if (album != null) {
       albumFragment.onAlbumRetrieved(album);
     } else {
