@@ -1,5 +1,6 @@
 package fr.vpm.mypix.flickr;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -30,9 +31,9 @@ public class FlickrAlbumsRetriever {
   private final Connection connection;
   private RealmFlickrAlbumRetriever realmFlickrAlbumRetriever;
 
-  public FlickrAlbumsRetriever(Retrofit flickrRetrofit) {
+  public FlickrAlbumsRetriever(Retrofit flickrRetrofit, Context context) {
     this.flickrRetrofit = flickrRetrofit;
-    this.connection = new Connection();
+    this.connection = new Connection(context);
     this.realmFlickrAlbumRetriever = new RealmFlickrAlbumRetriever();
   }
 

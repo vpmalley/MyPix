@@ -1,12 +1,39 @@
 package fr.vpm.mypix.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
+
 public class Connection {
 
+  private final Context context;
+
+  public Connection(Context context) {
+    this.context = context;
+  }
+
   public boolean isOnline() {
-    return true;
+    NetworkInfo activeNetwork = getNetworkInfo();
+    return activeNetwork != null &&
+        activeNetwork.isConnectedOrConnecting();
+  }
+
+  public boolean isOnlineThroughWifi() {
+    NetworkInfo activeNetwork = getNetworkInfo();
+    return activeNetwork != null &&
+        activeNetwork.isConnectedOrConnecting() &&
+        activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
   }
 
   public boolean isOffline() {
-    return false;
+    return !isOnline();
+  }
+
+  @Nullable
+  private NetworkInfo getNetworkInfo() {
+    ConnectivityManager cm =
+        (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    return cm != null ? cm.getActiveNetworkInfo() : null;
   }
 }

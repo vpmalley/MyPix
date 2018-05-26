@@ -25,7 +25,7 @@ public class AlbumsPresenter {
   public AlbumsPresenter(final Context context) {
     localAlbumsRetriever = new LocalAlbumsRetriever();
     Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(context);
-    flickrAlbumsRetriever = new FlickrAlbumsRetriever(flickrRetrofit);
+    flickrAlbumsRetriever = new FlickrAlbumsRetriever(flickrRetrofit, context);
   }
 
   void loadAlbums(Context context) {
