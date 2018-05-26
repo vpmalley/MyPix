@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.mypix.album.Album;
+import fr.vpm.mypix.album.FlickrPicture;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -38,9 +39,13 @@ public class RealmFlickrAlbumRetriever {
 
   @NonNull
   private Album map(@NonNull RealmFlickrAlbum flickrAlbum) {
-    return new Album(flickrAlbum.getId(),
+    Album album = new Album(flickrAlbum.getId(),
         flickrAlbum.getName(),
         flickrAlbum.getDetails(),
         Album.Source.FLICKR);
+    for (FlickrPicture flickrPicture : flickrAlbum.getPictures()) {
+      album.addPicture(flickrPicture);
+    }
+    return album;
   }
 }
