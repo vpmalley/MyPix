@@ -5,6 +5,4 @@
     <string name="first_picture_to_compare">first picture to compare</string>
     <string name="second_picture_to_compare">second picture to compare</string>
     <string name="title_activity_pictures_comparison">Compare</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
