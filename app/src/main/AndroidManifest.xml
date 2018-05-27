@@ -31,6 +31,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.vpm.mypix.AlbumListActivity"/>
         </activity>
+        <activity
+            android:name=".PicturesComparisonActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_pictures_comparison"
+            android:parentActivityName=".AlbumActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="fr.vpm.mypix.AlbumActivity"/>
+        </activity>
     </application>
 
 </manifest>
