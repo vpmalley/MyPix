@@ -29,6 +29,8 @@ public class PicturesComparisonActivity extends AppCompatActivity {
   public static final String ARG_PICTURE1_URL = PicturesComparisonActivity.class.getName() + "picture1_url";
   public static final String ARG_PICTURE2_URI = PicturesComparisonActivity.class.getName() + "picture2_uri";
   public static final String ARG_PICTURE2_URL = PicturesComparisonActivity.class.getName() + "picture2_url";
+  public static final int MAX_OPACITY_PROGRESS = 255;
+  public static final int MIN_OPACITY_PROGRESS = 0;
   /**
    * Some older devices needs a small delay between UI widget updates
    * and a change of the status and navigation bar.
@@ -62,12 +64,7 @@ public class PicturesComparisonActivity extends AppCompatActivity {
     }
   };
   private boolean mVisible;
-  private final Runnable mHideRunnable = new Runnable() {
-    @Override
-    public void run() {
-      hide();
-    }
-  };
+  private final Runnable mHideRunnable = () -> hide();
 
   public void start(Context context, Picture picture1, Picture picture2) {
     Intent intent = new Intent(context, AlbumActivity.class);
@@ -100,13 +97,9 @@ public class PicturesComparisonActivity extends AppCompatActivity {
     visibilitySeekbar = findViewById(R.id.pictures_visibility_seekbar);
     fillPicture1(getIntent());
     fillPicture2(getIntent());
+    setupSeekbar();
 
-    mContentView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        toggleVisibility();
-      }
-    });
+    mContentView.setOnClickListener(view -> toggleVisibility());
   }
 
   private void fillPicture1(Intent intent) {
@@ -121,6 +114,7 @@ public class PicturesComparisonActivity extends AppCompatActivity {
           .load(pictureUrl)
           .into(imageViewPicture1);
     }
+    imageViewPicture1.setImageAlpha(MAX_OPACITY_PROGRESS);
   }
 
   private void fillPicture2(Intent intent) {
@@ -135,6 +129,27 @@ public class PicturesComparisonActivity extends AppCompatActivity {
           .load(pictureUrl)
           .into(imageViewPicture2);
     }
+    imageViewPicture2.setImageAlpha(MIN_OPACITY_PROGRESS);
+  }
+
+  private void setupSeekbar() {
+    visibilitySeekbar.setMax(MAX_OPACITY_PROGRESS);
+    visibilitySeekbar.setProgress(MIN_OPACITY_PROGRESS);
+    visibilitySeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        imageViewPicture1.setImageAlpha(MAX_OPACITY_PROGRESS - progress);
+        imageViewPicture2.setImageAlpha(progress);
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+      }
+    });
   }
 
   @Override

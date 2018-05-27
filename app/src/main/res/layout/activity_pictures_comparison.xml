@@ -15,8 +15,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:contentDescription="@string/first_picture_to_compare"
-        android:visibility="visible"/>
+        android:contentDescription="@string/first_picture_to_compare"/>
 
     <ImageView
         android:id="@+id/picture2"
@@ -26,8 +25,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:contentDescription="@string/second_picture_to_compare"
-        android:visibility="gone"/>
+        android:contentDescription="@string/second_picture_to_compare"/>
 
     <SeekBar
         android:id="@+id/pictures_visibility_seekbar"
