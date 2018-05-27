@@ -2,4 +2,6 @@
     <string name="app_name">MyPix</string>
     <string name="album_picture">Album picture</string>
     <string name="pick_picture">Share picture</string>
+    <string name="first_picture_to_compare">first picture to compare</string>
+    <string name="second_picture_to_compare">second picture to compare</string>
 </resources>
