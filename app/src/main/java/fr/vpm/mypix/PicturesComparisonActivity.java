@@ -60,7 +60,6 @@ public class PicturesComparisonActivity extends AppCompatActivity {
       if (actionBar != null) {
         actionBar.show();
       }
-      visibilitySeekbar.setVisibility(View.VISIBLE);
     }
   };
   private boolean mVisible;
@@ -182,7 +181,6 @@ public class PicturesComparisonActivity extends AppCompatActivity {
     if (actionBar != null) {
       actionBar.hide();
     }
-    visibilitySeekbar.setVisibility(View.GONE);
     mVisible = false;
 
     mHideHandler.removeCallbacks(mShowPart2Runnable);
