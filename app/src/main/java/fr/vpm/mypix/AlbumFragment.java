@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -66,6 +69,37 @@ public class AlbumFragment extends Fragment {
     picturesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
     loadAlbum();
     return rootView;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.menu_album, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    int selectedPicturesCount = ((PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter()).getSelectedPictures().size();
+    if (selectedPicturesCount == 2) {
+      menu.findItem(R.id.compare).setVisible(true);
+    } else {
+      menu.findItem(R.id.compare).setVisible(false);
+    }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.compare:
+        List<Picture> selectedPictures = ((PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter()).getSelectedPictures();
+        if (selectedPictures.size() == 2) {
+          PicturesComparisonActivity.start(getContext(), selectedPictures.get(0), selectedPictures.get(1));
+        }
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   private void loadAlbum() {

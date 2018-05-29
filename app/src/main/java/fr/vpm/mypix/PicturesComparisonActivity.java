@@ -66,7 +66,7 @@ public class PicturesComparisonActivity extends AppCompatActivity {
   private boolean mVisible;
   private final Runnable mHideRunnable = () -> hide();
 
-  public void start(Context context, Picture picture1, Picture picture2) {
+  public static void start(Context context, Picture picture1, Picture picture2) {
     Intent intent = new Intent(context, AlbumActivity.class);
     if (picture1 instanceof PictureWithUri) {
       intent.putExtra(ARG_PICTURE1_URI, ((PictureWithUri) picture1).getUri());

@@ -98,6 +98,10 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     return mPictures.size();
   }
 
+  public List<Picture> getSelectedPictures() {
+    return selectedPictures;
+  }
+
   class ViewHolder extends RecyclerView.ViewHolder {
     final ImageView pictureDisplay;
     final TextView pictureExtension;
