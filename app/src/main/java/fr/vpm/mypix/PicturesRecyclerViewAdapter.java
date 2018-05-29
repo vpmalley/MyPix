@@ -24,6 +24,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
   private List<Picture> mPictures;
   private List<Picture> selectedPictures;
+  private final OnSelectedPicture onSelectedPicture;
   private final View.OnClickListener mOnPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
@@ -34,10 +35,12 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         selectedPictures.add(picture);
       }
       notifyDataSetChanged();
+      onSelectedPicture.selectedPicture();
     }
   };
 
-  PicturesRecyclerViewAdapter() {
+  PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture) {
+    this.onSelectedPicture = onSelectedPicture;
     mPictures = new ArrayList<>();
     selectedPictures = new ArrayList<>();
   }
@@ -100,6 +103,10 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
   public List<Picture> getSelectedPictures() {
     return selectedPictures;
+  }
+
+  interface OnSelectedPicture {
+    void selectedPicture();
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {

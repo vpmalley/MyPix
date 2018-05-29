@@ -52,12 +52,14 @@ public class AlbumFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    setHasOptionsMenu(true);
     if (getArguments().containsKey(ARG_ALBUMS)) {
       albums = getArguments().getParcelableArrayList(ARG_ALBUMS);
 
       Activity activity = this.getActivity();
       appBarLayout = activity.findViewById(R.id.toolbar_layout);
+    } else {
+      albums = new ArrayList<>();
     }
   }
 
@@ -65,7 +67,11 @@ public class AlbumFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.item_detail, container, false);
     picturesRecyclerView = rootView.findViewById(R.id.item_detail);
-    picturesRecyclerView.setAdapter(new PicturesRecyclerViewAdapter());
+    picturesRecyclerView.setAdapter(new PicturesRecyclerViewAdapter(() -> {
+      if (getActivity() != null) {
+        getActivity().invalidateOptionsMenu();
+      }
+    }));
     picturesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
     loadAlbum();
     return rootView;
