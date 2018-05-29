@@ -22,19 +22,24 @@ import fr.vpm.mypix.album.PictureWithUrl;
 
 public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.ViewHolder> {
 
-  private final SharePicturesWithDialog sharePicturesWithDialog;
+  private List<Picture> mPictures;
+  private List<Picture> selectedPictures;
   private final View.OnClickListener mOnPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
       Picture picture = (Picture) view.getTag();
-      sharePicturesWithDialog.sharePicture(view, picture);
+      if (selectedPictures.contains(picture)) {
+        selectedPictures.remove(picture);
+      } else {
+        selectedPictures.add(picture);
+      }
+      notifyDataSetChanged();
     }
   };
-  private List<Picture> mPictures;
 
   PicturesRecyclerViewAdapter() {
     mPictures = new ArrayList<>();
-    sharePicturesWithDialog = new SharePicturesWithDialog();
+    selectedPictures = new ArrayList<>();
   }
 
   void setPictures(List<Picture> pictures) {
@@ -79,6 +84,11 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     } else {
       holder.pictureSourceLocal.setVisibility(View.GONE);
     }
+    if (selectedPictures.contains(picture)) {
+      holder.pictureSelected.setVisibility(View.VISIBLE);
+    } else {
+      holder.pictureSelected.setVisibility(View.GONE);
+    }
     holder.itemView.setTag(mPictures.get(position));
     holder.itemView.setOnClickListener(mOnPictureClickListener);
   }
@@ -93,6 +103,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     final TextView pictureExtension;
     final ImageView pictureSourceFlickr;
     final ImageView pictureSourceLocal;
+    final ImageView pictureSelected;
 
     ViewHolder(View view) {
       super(view);
@@ -100,6 +111,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
       pictureExtension = view.findViewById(R.id.picture_extension);
       pictureSourceFlickr = view.findViewById(R.id.picture_source_flickr);
       pictureSourceLocal = view.findViewById(R.id.picture_source_local);
+      pictureSelected = view.findViewById(R.id.picture_selected);
     }
   }
 }
