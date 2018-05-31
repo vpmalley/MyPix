@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class AlbumsPresenter {
     allAlbums.addAll(albums);
     Map<String, List<Album>> albumsByName = mapAlbumsByName(allAlbums);
     List<AlbumDisplay> albumDisplays = mapAlbumsToDisplays(albumsByName);
+    Collections.sort(albumDisplays, (o1, o2) -> o1.getName().compareTo(o2.getName()));
     ((AlbumListActivity) context).onAlbumsLoaded(albumDisplays);
   }
 
