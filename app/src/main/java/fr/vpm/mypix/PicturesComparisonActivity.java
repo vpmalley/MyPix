@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.bumptech.glide.Glide;
@@ -28,7 +29,9 @@ public class PicturesComparisonActivity extends AppCompatActivity {
   public static final String ARG_PICTURE2_URL = PicturesComparisonActivity.class.getName() + "picture2_url";
   public static final int MAX_OPACITY_PROGRESS = 255;
   public static final int MIN_OPACITY_PROGRESS = 0;
+  public static final int MID_OPACITY = 120;
 
+  private RelativeLayout contentView;
   private ImageView imageViewPicture1;
   private ImageView imageViewPicture2;
   private SeekBar visibilitySeekbar;
@@ -57,9 +60,11 @@ public class PicturesComparisonActivity extends AppCompatActivity {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    contentView = findViewById(R.id.contentView);
     imageViewPicture1 = findViewById(R.id.picture1);
     imageViewPicture2 = findViewById(R.id.picture2);
     visibilitySeekbar = findViewById(R.id.pictures_visibility_seekbar);
+    contentView.setOnClickListener(v -> togglePicture());
     fillPicture1(getIntent());
     fillPicture2(getIntent());
     setupSeekbar();
@@ -93,6 +98,18 @@ public class PicturesComparisonActivity extends AppCompatActivity {
           .into(imageViewPicture2);
     }
     imageViewPicture2.setImageAlpha(MIN_OPACITY_PROGRESS);
+  }
+
+  private void togglePicture() {
+    if (imageViewPicture1.getImageAlpha() > MID_OPACITY) {
+      imageViewPicture1.setImageAlpha(MIN_OPACITY_PROGRESS);
+      imageViewPicture2.setImageAlpha(MAX_OPACITY_PROGRESS);
+      visibilitySeekbar.setProgress(MAX_OPACITY_PROGRESS);
+    } else {
+      imageViewPicture1.setImageAlpha(MAX_OPACITY_PROGRESS);
+      imageViewPicture2.setImageAlpha(MIN_OPACITY_PROGRESS);
+      visibilitySeekbar.setProgress(MIN_OPACITY_PROGRESS);
+    }
   }
 
   private void setupSeekbar() {
