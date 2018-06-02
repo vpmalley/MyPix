@@ -26,6 +26,7 @@
         <activity
             android:name=".AlbumActivity"
             android:parentActivityName=".AlbumListActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
