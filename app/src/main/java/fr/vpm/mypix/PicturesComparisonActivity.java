@@ -105,10 +105,12 @@ public class PicturesComparisonActivity extends AppCompatActivity {
       imageViewPicture1.setImageAlpha(MIN_OPACITY_PROGRESS);
       imageViewPicture2.setImageAlpha(MAX_OPACITY_PROGRESS);
       visibilitySeekbar.setProgress(MAX_OPACITY_PROGRESS);
+      visibilitySeekbar.refreshDrawableState();
     } else {
       imageViewPicture1.setImageAlpha(MAX_OPACITY_PROGRESS);
       imageViewPicture2.setImageAlpha(MIN_OPACITY_PROGRESS);
       visibilitySeekbar.setProgress(MIN_OPACITY_PROGRESS);
+      visibilitySeekbar.refreshDrawableState();
     }
   }
 
