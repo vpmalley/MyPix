@@ -41,6 +41,7 @@ public class AlbumFragment extends Fragment {
   private List<ParcelableAlbum> albums;
   private List<Picture> allPictures = new ArrayList<>();
   private List<Album> allAlbums = new ArrayList<>();
+  private DeletePicturesWithDialog deletePicturesWithDialog;
 
 
   /**
@@ -63,6 +64,7 @@ public class AlbumFragment extends Fragment {
       albums = new ArrayList<>();
     }
     sharePicturesWithDialog = new SharePicturesWithDialog();
+    deletePicturesWithDialog = new DeletePicturesWithDialog();
   }
 
   @Override
@@ -95,7 +97,7 @@ public class AlbumFragment extends Fragment {
       menu.findItem(R.id.compare).setVisible(false);
     }
     if (selectedPicturesCount > 0) {
-      menu.findItem(R.id.delete).setVisible(false);
+      menu.findItem(R.id.delete).setVisible(true);
       menu.findItem(R.id.share).setVisible(true);
     } else {
       menu.findItem(R.id.delete).setVisible(false);
@@ -115,6 +117,11 @@ public class AlbumFragment extends Fragment {
       case R.id.share:
         if (selectedPictures.size() == 1) {
           sharePicturesWithDialog.sharePicture(getContext(), selectedPictures.get(0));
+        }
+        return true;
+      case R.id.delete:
+        if (!selectedPictures.isEmpty()) {
+          deletePicturesWithDialog.deletePictures(picturesRecyclerView, selectedPictures);
         }
         return true;
       default:
