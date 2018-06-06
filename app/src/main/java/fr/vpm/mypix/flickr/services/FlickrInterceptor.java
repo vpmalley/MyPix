@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
-import fr.vpm.mypix.R;
+import fr.vpm.mypix.BuildConfig;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -30,7 +30,7 @@ public class FlickrInterceptor implements Interceptor {
     HttpUrl urlWithApiKey = request.url().newBuilder()
         .addEncodedQueryParameter("format", "json")
         .addEncodedQueryParameter("nojsoncallback", "1")
-        .addEncodedQueryParameter("api_key", context.getString(R.string.flickr_api_key))
+        .addEncodedQueryParameter("api_key", BuildConfig.FLICKR_API_KEY)
         .build();
     Request newRequest = request.newBuilder().url(urlWithApiKey).build();
 
