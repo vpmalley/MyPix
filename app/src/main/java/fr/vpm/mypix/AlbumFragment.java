@@ -34,6 +34,7 @@ public class AlbumFragment extends Fragment {
   public static final String ARG_ALBUMS = "albums";
   private LocalAlbumRetriever localAlbumRetriever;
   private FlickrAlbumRetriever flickrAlbumRetriever;
+  private SharePicturesWithDialog sharePicturesWithDialog;
 
   private RecyclerView picturesRecyclerView;
   private CollapsingToolbarLayout appBarLayout;
@@ -61,6 +62,7 @@ public class AlbumFragment extends Fragment {
     } else {
       albums = new ArrayList<>();
     }
+    sharePicturesWithDialog = new SharePicturesWithDialog();
   }
 
   @Override
@@ -92,15 +94,27 @@ public class AlbumFragment extends Fragment {
     } else {
       menu.findItem(R.id.compare).setVisible(false);
     }
+    if (selectedPicturesCount > 0) {
+      menu.findItem(R.id.delete).setVisible(false);
+      menu.findItem(R.id.share).setVisible(true);
+    } else {
+      menu.findItem(R.id.delete).setVisible(false);
+      menu.findItem(R.id.share).setVisible(false);
+    }
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    List<Picture> selectedPictures = ((PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter()).getSelectedPictures();
     switch (item.getItemId()) {
       case R.id.compare:
-        List<Picture> selectedPictures = ((PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter()).getSelectedPictures();
         if (selectedPictures.size() == 2) {
           PicturesComparisonActivity.start(getContext(), selectedPictures.get(0), selectedPictures.get(1));
+        }
+        return true;
+      case R.id.share:
+        if (selectedPictures.size() == 1) {
+          sharePicturesWithDialog.sharePicture(getContext(), selectedPictures.get(0));
         }
         return true;
       default:

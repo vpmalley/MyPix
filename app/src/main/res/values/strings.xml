@@ -6,4 +6,6 @@
     <string name="second_picture_to_compare">second picture to compare</string>
     <string name="title_activity_pictures_comparison">Compare</string>
     <string name="compare">Compare</string>
+    <string name="delete">Delete</string>
+    <string name="share">Share</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import fr.vpm.mypix.album.LocalDisplayPicture;
 import fr.vpm.mypix.album.Picture;
@@ -13,19 +12,19 @@ import fr.vpm.mypix.album.PictureWithUri;
 
 public class SharePicturesWithDialog {
 
-  void sharePicture(View view, Picture picture) {
+  void sharePicture(Context context, Picture picture) {
     if (picture instanceof LocalDisplayPicture) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(R.string.pick_picture)
           .setItems(getPictureDescriptions((LocalDisplayPicture) picture), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
               Picture pickedPicture = ((LocalDisplayPicture) picture).getPictures().get(which);
-              sharePictureWithUri(view.getContext(), (PictureWithUri) pickedPicture);
+              sharePictureWithUri(context, (PictureWithUri) pickedPicture);
             }
           });
       builder.create().show();
     } else if (picture instanceof PictureWithUri) {
-      sharePictureWithUri(view.getContext(), (PictureWithUri) picture);
+      sharePictureWithUri(context, (PictureWithUri) picture);
     }
   }
 

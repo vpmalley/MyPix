@@ -22,9 +22,9 @@ import fr.vpm.mypix.album.PictureWithUrl;
 
 public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.ViewHolder> {
 
+  private final OnSelectedPicture onSelectedPicture;
   private List<Picture> mPictures;
   private List<Picture> selectedPictures;
-  private final OnSelectedPicture onSelectedPicture;
   private final View.OnClickListener mOnPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
@@ -41,8 +41,8 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
   PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture) {
     this.onSelectedPicture = onSelectedPicture;
-    mPictures = new ArrayList<>();
-    selectedPictures = new ArrayList<>();
+    this.mPictures = new ArrayList<>();
+    this.selectedPictures = new ArrayList<>();
   }
 
   void setPictures(List<Picture> pictures) {
