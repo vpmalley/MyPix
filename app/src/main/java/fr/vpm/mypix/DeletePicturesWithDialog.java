@@ -1,7 +1,6 @@
 package fr.vpm.mypix;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
@@ -13,18 +12,16 @@ import fr.vpm.mypix.album.PictureWithUri;
 
 public class DeletePicturesWithDialog {
 
-  void deletePictures(View view, List<Picture> pictures) {
+  void deletePictures(View view, List<Picture> pictures, OnPicturesDeleted onPicturesDeleted) {
     new AlertDialog.Builder(view.getContext())
         .setTitle(R.string.delete_pictures_title)
         .setMessage(R.string.delete_pictures_message)
         .setCancelable(true)
         .setNegativeButton(R.string.all_cancel, null)
-        .setPositiveButton(R.string.all_ok, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            deletePicturesForGood(pictures);
-            Snackbar.make(view, R.string.snackbar_pictures_deleted, Snackbar.LENGTH_SHORT).show();
-          }
+        .setPositiveButton(R.string.all_ok, (dialog, which) -> {
+          deletePicturesForGood(pictures);
+          onPicturesDeleted.onPicturesDeleted();
+          Snackbar.make(view, R.string.snackbar_pictures_deleted, Snackbar.LENGTH_SHORT).show();
         })
         .create().show();
   }
@@ -39,5 +36,9 @@ public class DeletePicturesWithDialog {
       }
     }
 
+  }
+
+  interface OnPicturesDeleted {
+    void onPicturesDeleted();
   }
 }

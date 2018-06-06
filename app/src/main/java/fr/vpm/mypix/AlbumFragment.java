@@ -121,7 +121,7 @@ public class AlbumFragment extends Fragment {
         return true;
       case R.id.delete:
         if (!selectedPictures.isEmpty()) {
-          deletePicturesWithDialog.deletePictures(picturesRecyclerView, selectedPictures);
+          deletePicturesWithDialog.deletePictures(picturesRecyclerView, selectedPictures, this::loadAlbum);
         }
         return true;
       default:
@@ -130,6 +130,7 @@ public class AlbumFragment extends Fragment {
   }
 
   private void loadAlbum() {
+    allAlbums.clear();
     localAlbumRetriever = new LocalAlbumRetriever();
     Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(getContext());
     flickrAlbumRetriever = new FlickrAlbumRetriever(flickrRetrofit);
