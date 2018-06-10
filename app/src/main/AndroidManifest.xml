@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -25,8 +26,8 @@
         </activity>
         <activity
             android:name=".AlbumActivity"
-            android:parentActivityName=".AlbumListActivity"
             android:launchMode="singleTop"
+            android:parentActivityName=".AlbumListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

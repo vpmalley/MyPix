@@ -70,7 +70,7 @@ public class FlickrAlbumsRetriever {
     public void onResponse(@NonNull Call<FlickrPhotosets> call, @NonNull Response<FlickrPhotosets> response) {
       Log.d(FlickrAlbumsRetriever.class.getSimpleName(), "retrieved photosets");
       FlickrPhotosets body = response.body();
-      List<Photoset> photosets = body != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
+      List<Photoset> photosets = body != null && body.getPhotosets() != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
       ArrayList<Album> albums = mapAlbums(photosets);
       albumsPresenter.onAlbumsRetrieved(albums);
     }

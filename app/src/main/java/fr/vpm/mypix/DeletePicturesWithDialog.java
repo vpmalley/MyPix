@@ -1,10 +1,11 @@
 package fr.vpm.mypix;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import java.io.File;
 import java.util.List;
 
 import fr.vpm.mypix.album.Picture;
@@ -19,20 +20,18 @@ public class DeletePicturesWithDialog {
         .setCancelable(true)
         .setNegativeButton(R.string.all_cancel, null)
         .setPositiveButton(R.string.all_ok, (dialog, which) -> {
-          deletePicturesForGood(pictures);
+          deletePicturesForGood(view.getContext(), pictures);
           onPicturesDeleted.onPicturesDeleted();
           Snackbar.make(view, R.string.snackbar_pictures_deleted, Snackbar.LENGTH_SHORT).show();
         })
         .create().show();
   }
 
-  private void deletePicturesForGood(List<Picture> pictures) {
+  private void deletePicturesForGood(Context context, List<Picture> pictures) {
     for (Picture picture : pictures) {
       if (picture instanceof PictureWithUri) {
-        File file = new File(((PictureWithUri) picture).getUri().getPath());
-        if (file.exists()) {
-          file.delete();
-        }
+        ContentResolver contentResolver = context.getContentResolver();
+        contentResolver.delete(((PictureWithUri) picture).getUri(), null, null);
       }
     }
 
