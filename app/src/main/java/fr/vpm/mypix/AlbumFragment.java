@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fr.vpm.mypix.album.Album;
@@ -146,6 +147,7 @@ public class AlbumFragment extends Fragment {
     allAlbums.add(album);
     PicturesRecyclerViewAdapter adapter = (PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter();
     allPictures.addAll(album.getPictures());
+    Collections.sort(allPictures, (pic1, pic2) -> pic1.getFileName().compareTo(pic2.getFileName()));
     adapter.setPictures(allPictures);
     adapter.notifyDataSetChanged();
   }
