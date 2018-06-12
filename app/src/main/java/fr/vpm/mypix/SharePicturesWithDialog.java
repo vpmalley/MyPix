@@ -1,43 +1,17 @@
 package fr.vpm.mypix;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
-import fr.vpm.mypix.album.LocalDisplayPicture;
 import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;
 
 public class SharePicturesWithDialog {
 
   void sharePicture(Context context, Picture picture) {
-    if (picture instanceof LocalDisplayPicture) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder.setTitle(R.string.pick_picture)
-          .setItems(getPictureDescriptions((LocalDisplayPicture) picture), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              Picture pickedPicture = ((LocalDisplayPicture) picture).getPictures().get(which);
-              sharePictureWithUri(context, (PictureWithUri) pickedPicture);
-            }
-          });
-      builder.create().show();
-    } else if (picture instanceof PictureWithUri) {
+    if (picture instanceof PictureWithUri) {
       sharePictureWithUri(context, (PictureWithUri) picture);
     }
-  }
-
-  @NonNull
-  private String[] getPictureDescriptions(LocalDisplayPicture picture) {
-    String[] picturesDescriptions = new String[picture.getPictures().size()];
-    for (int i = 0; i < picture.getPictures().size(); i++) {
-      Picture pictureToShare = picture.getPictures().get(i);
-      if (pictureToShare instanceof PictureWithUri) {
-        picturesDescriptions[i] = ((PictureWithUri) pictureToShare).getFileNameWithExtension();
-      }
-    }
-    return picturesDescriptions;
   }
 
   private void sharePictureWithUri(Context context, PictureWithUri picture) {

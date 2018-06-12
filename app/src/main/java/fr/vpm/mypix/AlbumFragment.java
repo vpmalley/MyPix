@@ -2,7 +2,6 @@ package fr.vpm.mypix;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,15 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import fr.vpm.mypix.album.Album;
-import fr.vpm.mypix.album.LocalDisplayPicture;
 import fr.vpm.mypix.album.ParcelableAlbum;
 import fr.vpm.mypix.album.Picture;
-import fr.vpm.mypix.album.PictureWithUri;
 import fr.vpm.mypix.flickr.FlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrRetrofit;
 import fr.vpm.mypix.local.LocalAlbumRetriever;
@@ -151,49 +146,8 @@ public class AlbumFragment extends Fragment {
     allAlbums.add(album);
     PicturesRecyclerViewAdapter adapter = (PicturesRecyclerViewAdapter) picturesRecyclerView.getAdapter();
     allPictures.addAll(album.getPictures());
-    Map<String, List<Picture>> picturesByName = mapPicturesByName(allPictures);
-    List<Picture> displayPictures = mapPicturesToDisplays(picturesByName);
-    adapter.setPictures(displayPictures);
+    adapter.setPictures(allPictures);
     adapter.notifyDataSetChanged();
   }
-
-  @NonNull
-  private Map<String, List<Picture>> mapPicturesByName(List<Picture> allPictures) {
-    Map<String, List<Picture>> picturesByName = new HashMap<>();
-    for (Picture newPicture : allPictures) {
-      List<Picture> picturesWithThisName = picturesByName.get(newPicture.getFileName());
-      if (picturesWithThisName == null) {
-        picturesWithThisName = new ArrayList<>();
-      }
-      picturesWithThisName.add(newPicture);
-      picturesByName.put(newPicture.getFileName(), picturesWithThisName);
-    }
-    return picturesByName;
-  }
-
-  private List<Picture> mapPicturesToDisplays(Map<String, List<Picture>> picturesByName) {
-    List<Picture> pictures = new ArrayList<>();
-    for (List<Picture> picturesWithThisName : picturesByName.values()) {
-      PictureWithUri firstPictureWithUri = getFirstPictureWithUri(picturesWithThisName);
-      if (firstPictureWithUri == null) {
-        pictures.addAll(picturesWithThisName);
-      } else {
-        LocalDisplayPicture displayPicture = new LocalDisplayPicture(firstPictureWithUri);
-        displayPicture.addPictures(picturesWithThisName);
-        pictures.add(displayPicture);
-      }
-    }
-    return pictures;
-  }
-
-  private PictureWithUri getFirstPictureWithUri(List<Picture> pictures) {
-    for (Picture picture : pictures) {
-      if (picture instanceof PictureWithUri) {
-        return (PictureWithUri) picture;
-      }
-    }
-    return null;
-  }
-
 
 }
