@@ -92,6 +92,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     } else {
       holder.pictureSelected.setVisibility(View.GONE);
     }
+    holder.pictureName.setText(picture.getFileName().substring(picture.getFileName().length() - 4));
     holder.itemView.setTag(mPictures.get(position));
     holder.itemView.setOnClickListener(mOnPictureClickListener);
   }
@@ -112,6 +113,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
   class ViewHolder extends RecyclerView.ViewHolder {
     final ImageView pictureDisplay;
     final TextView pictureExtension;
+    final TextView pictureName;
     final ImageView pictureSourceFlickr;
     final ImageView pictureSourceLocal;
     final ImageView pictureSelected;
@@ -120,6 +122,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
       super(view);
       pictureDisplay = view.findViewById(R.id.picture_display);
       pictureExtension = view.findViewById(R.id.picture_extension);
+      pictureName = view.findViewById(R.id.picture_name);
       pictureSourceFlickr = view.findViewById(R.id.picture_source_flickr);
       pictureSourceLocal = view.findViewById(R.id.picture_source_local);
       pictureSelected = view.findViewById(R.id.picture_selected);
