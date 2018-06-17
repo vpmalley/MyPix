@@ -42,7 +42,7 @@ public class FlickrAlbumRetriever {
 
   public void getFlickrAlbum(final AlbumFragment albumFragment, final String flickrAlbumId) {
     Album album = realmFlickrAlbumRetriever.retrieveAlbum(flickrAlbumId);
-    if (album != null) {
+    if (album != null && album.getPictures().size() > 1) {
       albumFragment.onAlbumRetrieved(album);
     } else {
       FlickrPhotosetService service = flickrRetrofit.create(FlickrPhotosetService.class);
@@ -67,7 +67,7 @@ public class FlickrAlbumRetriever {
       FlickrPhotoset body = response.body();
       SinglePhotoset photoset = body != null ? body.getPhotoset() : null;
       Album album = mapAlbum(photoset);
-      realmFlickrAlbumPersister.persist(album);
+      realmFlickrAlbumPersister.update(album);
       albumFragment.onAlbumRetrieved(album);
     }
 

@@ -12,6 +12,7 @@ import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
 import fr.vpm.mypix.flickr.beans.FlickrPhotosets;
 import fr.vpm.mypix.flickr.beans.Photoset;
+import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumPersister;
 import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetsService;
 import fr.vpm.mypix.utils.Connection;
@@ -62,8 +63,11 @@ public class FlickrAlbumsRetriever {
 
     private final AlbumsPresenter albumsPresenter;
 
+    private final RealmFlickrAlbumPersister realmFlickrAlbumPersister;
+
     FlickrPhotosetsCallback(AlbumsPresenter albumsPresenter) {
       this.albumsPresenter = albumsPresenter;
+      realmFlickrAlbumPersister = new RealmFlickrAlbumPersister();
     }
 
     @Override
@@ -72,6 +76,7 @@ public class FlickrAlbumsRetriever {
       FlickrPhotosets body = response.body();
       List<Photoset> photosets = body != null && body.getPhotosets() != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
       ArrayList<Album> albums = mapAlbums(photosets);
+      realmFlickrAlbumPersister.persistIfAbsent(albums);
       albumsPresenter.onAlbumsRetrieved(albums);
     }
 
