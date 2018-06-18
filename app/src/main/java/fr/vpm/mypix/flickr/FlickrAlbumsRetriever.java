@@ -42,7 +42,7 @@ public class FlickrAlbumsRetriever {
   private static ArrayList<Album> mapAlbums(List<Photoset> photosets) {
     ArrayList<Album> albums = new ArrayList<>();
     for (Photoset photoset : photosets) {
-      Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content(), Album.Source.FLICKR);
+      Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content(), Album.Source.FLICKR, photoset.getPhotos());
       album.addPicture(new FlickrPicture(photoset.getPrimary_photo_extras().getUrl_m(), photoset.getPrimary_photo_extras().getUrl_o(), photoset.getTitle().get_content()));
       albums.add(album);
     }
@@ -76,7 +76,7 @@ public class FlickrAlbumsRetriever {
       FlickrPhotosets body = response.body();
       List<Photoset> photosets = body != null && body.getPhotosets() != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
       ArrayList<Album> albums = mapAlbums(photosets);
-      realmFlickrAlbumPersister.persistIfAbsent(albums);
+      realmFlickrAlbumPersister.updateAlbumsWithCover(albums);
       albumsPresenter.onAlbumsRetrieved(albums);
     }
 

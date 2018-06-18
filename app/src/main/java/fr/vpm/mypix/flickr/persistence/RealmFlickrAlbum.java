@@ -12,6 +12,7 @@ public class RealmFlickrAlbum extends RealmObject {
   private String name;
   private String details;
   private RealmList<FlickrPicture> pictures;
+  private int picturesCount;
 
   public RealmFlickrAlbum() {
   }
@@ -26,6 +27,7 @@ public class RealmFlickrAlbum extends RealmObject {
         pictures.add((FlickrPicture) picture);
       }
     }
+    this.picturesCount = album.getPicturesCount();
   }
 
   public String getId() {
@@ -42,5 +44,9 @@ public class RealmFlickrAlbum extends RealmObject {
 
   public RealmList<FlickrPicture> getPictures() {
     return pictures;
+  }
+
+  public int getPicturesCount() {
+    return picturesCount;
   }
 }

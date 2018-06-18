@@ -12,12 +12,14 @@ public class Album {
   private final String name;
   private final String details;
   private final List<Picture> pictures;
+  private final int picturesCount;
 
-  public Album(String id, String name, String details, Source source) {
+  public Album(String id, String name, String details, Source source, int picturesCount) {
     this.id = id;
     this.name = name;
     this.details = details;
     this.source = source;
+    this.picturesCount = picturesCount;
     this.pictures = new ArrayList<>();
   }
 
@@ -39,6 +41,10 @@ public class Album {
 
   public List<Picture> getPictures() {
     return pictures;
+  }
+
+  public int getPicturesCount() {
+    return picturesCount;
   }
 
   public enum Source {

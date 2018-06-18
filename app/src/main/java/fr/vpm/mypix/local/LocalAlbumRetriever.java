@@ -42,7 +42,7 @@ public class LocalAlbumRetriever {
     if (localPictures.moveToFirst()) {
       String bucketId = localPictures.getString(localPictures.getColumnIndex(BUCKET_ID));
       String bucketName = localPictures.getString(localPictures.getColumnIndex(BUCKET_DISPLAY_NAME));
-      album = new Album(bucketId, bucketName, null, Album.Source.LOCAL);
+      album = new Album(bucketId, bucketName, null, Album.Source.LOCAL, localPictures.getCount());
       while (localPictures.moveToNext()) {
         long pictureId = localPictures.getLong(localPictures.getColumnIndex(_ID));
         String fileName = localPictures.getString(localPictures.getColumnIndex(DATA));

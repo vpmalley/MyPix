@@ -42,7 +42,8 @@ public class RealmFlickrAlbumRetriever {
     Album album = new Album(flickrAlbum.getId(),
         flickrAlbum.getName(),
         flickrAlbum.getDetails(),
-        Album.Source.FLICKR);
+        Album.Source.FLICKR,
+        flickrAlbum.getPicturesCount());
     for (FlickrPicture flickrPicture : flickrAlbum.getPictures()) {
       album.addPicture(flickrPicture);
     }

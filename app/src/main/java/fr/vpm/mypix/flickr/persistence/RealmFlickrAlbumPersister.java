@@ -9,7 +9,7 @@ public class RealmFlickrAlbumPersister {
 
   private static final String KEY_ID = "id";
 
-  public void update(Album album) {
+  public void updateFullAlbum(Album album) {
     RealmFlickrAlbum realmFlickrAlbum = new RealmFlickrAlbum(album);
     Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
@@ -20,16 +20,19 @@ public class RealmFlickrAlbumPersister {
     realm.commitTransaction();
   }
 
-  public void persistIfAbsent(List<Album> albums) {
+  public void updateAlbumsWithCover(List<Album> albums) {
     Realm realm = Realm.getDefaultInstance();
     realm.beginTransaction();
     for (Album album : albums) {
-      RealmFlickrAlbum realmFlickrAlbum = new RealmFlickrAlbum(album);
+      RealmFlickrAlbum latestFlickrAlbum = new RealmFlickrAlbum(album);
       RealmFlickrAlbum existingAlbum = realm.where(RealmFlickrAlbum.class)
-          .equalTo(KEY_ID, realmFlickrAlbum.getId())
+          .equalTo(KEY_ID, latestFlickrAlbum.getId())
           .findFirst();
       if (existingAlbum == null) {
-        realm.insert(realmFlickrAlbum);
+        realm.insert(latestFlickrAlbum);
+      } else if (existingAlbum.getPicturesCount() != latestFlickrAlbum.getPicturesCount()) {
+        latestFlickrAlbum.deleteFromRealm();
+        realm.insert(latestFlickrAlbum);
       }
     }
     realm.commitTransaction();
