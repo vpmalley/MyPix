@@ -92,7 +92,11 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     } else {
       holder.pictureSelected.setVisibility(View.GONE);
     }
-    holder.pictureName.setText(picture.getFileName().substring(picture.getFileName().length() - 4));
+    if (picture.getFileName().length() > 4) {
+      holder.pictureName.setText(picture.getFileName().substring(picture.getFileName().length() - 4));
+    } else {
+      holder.pictureName.setText(picture.getFileName());
+    }
     holder.itemView.setTag(mPictures.get(position));
     holder.itemView.setOnClickListener(mOnPictureClickListener);
   }
