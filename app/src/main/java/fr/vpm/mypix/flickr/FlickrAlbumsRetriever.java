@@ -50,8 +50,8 @@ public class FlickrAlbumsRetriever {
   }
 
   public void getFlickrAlbums(final AlbumsPresenter albumsPresenter) {
-    if (connection.isOffline()) {
-      List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
+    List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
+    if (albums != null && !albums.isEmpty()) {
       albumsPresenter.onAlbumsRetrieved(albums);
     } else {
       FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
