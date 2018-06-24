@@ -7,7 +7,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.vpm.mypix.AlbumsPresenter;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
 import fr.vpm.mypix.flickr.beans.FlickrPhotosets;
@@ -15,6 +14,7 @@ import fr.vpm.mypix.flickr.beans.Photoset;
 import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumPersister;
 import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetsService;
+import fr.vpm.mypix.local.LocalAlbumsRetriever;
 import fr.vpm.mypix.utils.Connection;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,24 +49,24 @@ public class FlickrAlbumsRetriever {
     return albums;
   }
 
-  public void getFlickrAlbums(final AlbumsPresenter albumsPresenter) {
+  public void getFlickrAlbums(final LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
     List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
     if (albums != null && !albums.isEmpty()) {
-      albumsPresenter.onAlbumsRetrieved(albums);
+      onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
     } else {
       FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
-      service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(albumsPresenter));
+      service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(onAlbumsRetrievedListener));
     }
   }
 
   private static class FlickrPhotosetsCallback implements Callback<FlickrPhotosets> {
 
-    private final AlbumsPresenter albumsPresenter;
+    private final LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener;
 
     private final RealmFlickrAlbumPersister realmFlickrAlbumPersister;
 
-    FlickrPhotosetsCallback(AlbumsPresenter albumsPresenter) {
-      this.albumsPresenter = albumsPresenter;
+    FlickrPhotosetsCallback(LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
+      this.onAlbumsRetrievedListener = onAlbumsRetrievedListener;
       realmFlickrAlbumPersister = new RealmFlickrAlbumPersister();
     }
 
@@ -77,7 +77,7 @@ public class FlickrAlbumsRetriever {
       List<Photoset> photosets = body != null && body.getPhotosets() != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
       ArrayList<Album> albums = mapAlbums(photosets);
       realmFlickrAlbumPersister.updateAlbumsWithCover(albums);
-      albumsPresenter.onAlbumsRetrieved(albums);
+      onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
     }
 
     @Override
