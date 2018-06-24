@@ -3,7 +3,6 @@ package fr.vpm.mypix.flickr;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import fr.vpm.mypix.AlbumFragment;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.FlickrPicture;
 import fr.vpm.mypix.flickr.beans.FlickrPhotoset;
@@ -12,6 +11,7 @@ import fr.vpm.mypix.flickr.beans.SinglePhotoset;
 import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumPersister;
 import fr.vpm.mypix.flickr.persistence.RealmFlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrPhotosetService;
+import fr.vpm.mypix.local.LocalAlbumRetriever;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,24 +40,24 @@ public class FlickrAlbumRetriever {
     return album;
   }
 
-  public void getFlickrAlbum(final AlbumFragment albumFragment, final String flickrAlbumId) {
+  public void getFlickrAlbum(final LocalAlbumRetriever.OnAlbumRetrievedListener onAlbumRetrievedListener, final String flickrAlbumId) {
     Album album = realmFlickrAlbumRetriever.retrieveAlbum(flickrAlbumId);
     if (album != null && album.getPicturesCount() == album.getPictures().size()) {
-      albumFragment.onAlbumRetrieved(album);
+      onAlbumRetrievedListener.onAlbumRetrieved(album);
     } else {
       FlickrPhotosetService service = flickrRetrofit.create(FlickrPhotosetService.class);
-      service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(albumFragment));
+      service.getAlbum("107938954@N05", flickrAlbumId).enqueue(new FlickrPhotosetCallback(onAlbumRetrievedListener));
     }
   }
 
   private static class FlickrPhotosetCallback implements Callback<FlickrPhotoset> {
 
-    private final AlbumFragment albumFragment;
+    private final LocalAlbumRetriever.OnAlbumRetrievedListener onAlbumRetrievedListener;
 
     private final RealmFlickrAlbumPersister realmFlickrAlbumPersister;
 
-    FlickrPhotosetCallback(AlbumFragment albumFragment) {
-      this.albumFragment = albumFragment;
+    FlickrPhotosetCallback(LocalAlbumRetriever.OnAlbumRetrievedListener onAlbumRetrievedListener) {
+      this.onAlbumRetrievedListener = onAlbumRetrievedListener;
       realmFlickrAlbumPersister = new RealmFlickrAlbumPersister();
     }
 
@@ -68,7 +68,7 @@ public class FlickrAlbumRetriever {
       SinglePhotoset photoset = body != null ? body.getPhotoset() : null;
       Album album = mapAlbum(photoset);
       realmFlickrAlbumPersister.updateFullAlbum(album);
-      albumFragment.onAlbumRetrieved(album);
+      onAlbumRetrievedListener.onAlbumRetrieved(album);
     }
 
     @Override

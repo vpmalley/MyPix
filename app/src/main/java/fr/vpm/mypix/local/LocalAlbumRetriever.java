@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-import fr.vpm.mypix.AlbumFragment;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.LocalPicture;
 
@@ -22,7 +21,7 @@ import static android.provider.MediaStore.MediaColumns.TITLE;
 public class LocalAlbumRetriever {
 
   @NonNull
-  public void getLocalAlbum(Context context, AlbumFragment albumFragment, String albumId) {
+  public void getLocalAlbum(Context context, OnAlbumRetrievedListener onAlbumRetrievedListener, String albumId) {
     try (Cursor localPictures = context.getContentResolver().query(
         EXTERNAL_CONTENT_URI,
         new String[]{_ID, DISPLAY_NAME, BUCKET_ID, BUCKET_DISPLAY_NAME, DATA, TITLE, DATE_ADDED},
@@ -32,7 +31,7 @@ public class LocalAlbumRetriever {
     )) {
       if (localPictures != null) {
         Album album = mapAlbum(localPictures);
-        albumFragment.onAlbumRetrieved(album);
+        onAlbumRetrievedListener.onAlbumRetrieved(album);
       }
     }
   }
@@ -53,6 +52,10 @@ public class LocalAlbumRetriever {
       }
     }
     return album;
+  }
+
+  public interface OnAlbumRetrievedListener {
+    void onAlbumRetrieved(final Album album);
   }
 
 

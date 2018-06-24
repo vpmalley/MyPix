@@ -27,7 +27,7 @@ import fr.vpm.mypix.local.LocalAlbumRetriever;
 import fr.vpm.mypix.utils.Zoom;
 import retrofit2.Retrofit;
 
-public class AlbumFragment extends Fragment {
+public class AlbumFragment extends Fragment implements LocalAlbumRetriever.OnAlbumRetrievedListener {
 
   public static final String ARG_ALBUMS = "albums";
   private LocalAlbumRetriever localAlbumRetriever;
