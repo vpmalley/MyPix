@@ -16,7 +16,7 @@ import fr.vpm.mypix.flickr.services.FlickrRetrofit;
 import fr.vpm.mypix.local.LocalAlbumsRetriever;
 import retrofit2.Retrofit;
 
-public class AlbumsPresenter {
+public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedListener {
 
   private final LocalAlbumsRetriever localAlbumsRetriever;
   private final FlickrAlbumsRetriever flickrAlbumsRetriever;

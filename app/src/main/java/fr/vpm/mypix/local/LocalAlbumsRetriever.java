@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import fr.vpm.mypix.AlbumsPresenter;
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.LocalPicture;
 
@@ -25,7 +25,7 @@ import static android.provider.MediaStore.MediaColumns.TITLE;
 public class LocalAlbumsRetriever {
 
   @NonNull
-  public void getLocalAlbums(Context context, AlbumsPresenter albumsPresenter) {
+  public void getLocalAlbums(Context context, OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
     try (Cursor localAlbums = context.getContentResolver().query(
         EXTERNAL_CONTENT_URI,
         new String[]{_ID, DISPLAY_NAME, BUCKET_ID, BUCKET_DISPLAY_NAME, DATA, TITLE, DATE_ADDED},
@@ -35,10 +35,10 @@ public class LocalAlbumsRetriever {
     )) {
       if (localAlbums != null) {
         final Map<String, Album> albumsById = mapAlbums(localAlbums);
-        albumsPresenter.onAlbumsRetrieved(new ArrayList<>(albumsById.values()));
+        onAlbumsRetrievedListener.onAlbumsRetrieved(new ArrayList<>(albumsById.values()));
       }
     }
-    albumsPresenter.onAlbumsRetrieved(new ArrayList<>());
+    onAlbumsRetrievedListener.onAlbumsRetrieved(new ArrayList<>());
   }
 
   private Map<String, Album> mapAlbums(Cursor localAlbums) {
@@ -64,5 +64,8 @@ public class LocalAlbumsRetriever {
     return albumsById;
   }
 
+  public interface OnAlbumsRetrievedListener {
+    void onAlbumsRetrieved(final List<Album> albums);
+  }
 
 }
