@@ -23,9 +23,18 @@ import fr.vpm.mypix.album.PictureWithUrl;
 public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.ViewHolder> {
 
   private final OnSelectedPicture onSelectedPicture;
+  private final OnLongClick onLongClick;
+  private final View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
+    @Override
+    public boolean onLongClick(View view) {
+      Picture picture = (Picture) view.getTag();
+      onLongClick.onLongClick(view, picture);
+      return true;
+    }
+  };
   private List<Picture> mPictures;
   private List<Picture> selectedPictures;
-  private final View.OnClickListener mOnPictureClickListener = new View.OnClickListener() {
+  private final View.OnClickListener onPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
       Picture picture = (Picture) view.getTag();
@@ -39,8 +48,9 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     }
   };
 
-  PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture) {
+  PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture, OnLongClick onLongClickListener) {
     this.onSelectedPicture = onSelectedPicture;
+    this.onLongClick = onLongClickListener;
     this.mPictures = new ArrayList<>();
     this.selectedPictures = new ArrayList<>();
   }
@@ -98,7 +108,8 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
       holder.pictureName.setText(picture.getFileName());
     }
     holder.itemView.setTag(mPictures.get(position));
-    holder.itemView.setOnClickListener(mOnPictureClickListener);
+    holder.itemView.setOnClickListener(onPictureClickListener);
+    holder.itemView.setOnLongClickListener(onLongClickListener);
   }
 
   @Override
@@ -108,6 +119,10 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
   public List<Picture> getSelectedPictures() {
     return selectedPictures;
+  }
+
+  public interface OnLongClick {
+    void onLongClick(View view, Picture picture);
   }
 
   interface OnSelectedPicture {

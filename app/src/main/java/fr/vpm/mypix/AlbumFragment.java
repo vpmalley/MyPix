@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.flickr.FlickrAlbumRetriever;
 import fr.vpm.mypix.flickr.services.FlickrRetrofit;
 import fr.vpm.mypix.local.LocalAlbumRetriever;
+import fr.vpm.mypix.utils.Zoom;
 import retrofit2.Retrofit;
 
 public class AlbumFragment extends Fragment {
@@ -67,11 +69,13 @@ public class AlbumFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.item_detail, container, false);
     picturesRecyclerView = rootView.findViewById(R.id.item_detail);
+    ImageView expandedImageView = ((ViewGroup) container.getParent()).findViewById(R.id.expanded_image_view);
     picturesRecyclerView.setAdapter(new PicturesRecyclerViewAdapter(() -> {
       if (getActivity() != null) {
         getActivity().invalidateOptionsMenu();
       }
-    }));
+    },
+        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, container, picture)));
     picturesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
     loadAlbum();
     return rootView;
