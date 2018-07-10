@@ -13,4 +13,6 @@
     <string name="delete_pictures_title">Delete pictures</string>
     <string name="delete_pictures_message">Do you want to delete permanently these pictures?</string>
     <string name="snackbar_pictures_deleted">Your pictures were deleted.</string>
+    <string name="notif_synchro_flickr">Synchronising with Flickr</string>
+    <string name="notif_synchro_flickr_message">MyPix is synchronising your albums with Flickr</string>
 </resources>

@@ -1,6 +1,8 @@
 package fr.vpm.mypix;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Map;
 
 import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.AlbumDisplay;
+import fr.vpm.mypix.flickr.FlickrAlbumsRetrievalService;
 import fr.vpm.mypix.flickr.FlickrAlbumsRetriever;
 import fr.vpm.mypix.flickr.services.FlickrRetrofit;
 import fr.vpm.mypix.local.LocalAlbumsRetriever;
@@ -33,8 +36,14 @@ public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedLi
     this.context = context;
 
     allAlbums.clear();
-    flickrAlbumsRetriever.getFlickrAlbums(this);
+    //flickrAlbumsRetriever.getFlickrAlbums(this);
+    synchroniseAlbums((Activity) context);
     localAlbumsRetriever.getLocalAlbums(context, this);
+  }
+
+  private void synchroniseAlbums(Activity activity) {
+    Intent flickrSynchroIntent = new Intent(activity, FlickrAlbumsRetrievalService.class);
+    activity.startService(flickrSynchroIntent);
   }
 
   public void onAlbumsRetrieved(final List<Album> albums) {
