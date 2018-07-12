@@ -35,7 +35,7 @@ public class FlickrAlbumRetriever {
   private static Album mapAlbum(SinglePhotoset photoset) {
     final Album album = new Album(photoset.getId(), photoset.getTitle(), photoset.getTitle(), Album.Source.FLICKR, photoset.getTotal());
     for (Photo photo : photoset.getPhoto()) {
-      album.addPicture(new FlickrPicture(photo.getUrl_m(), photo.getUrl_o(), photo.getTitle()));
+      album.addPicture(new FlickrPicture(photo.getUrl_s(), photo.getUrl_o(), photo.getTitle()));
     }
     return album;
   }
@@ -65,10 +65,11 @@ public class FlickrAlbumRetriever {
     public void onResponse(Call<FlickrPhotoset> call, Response<FlickrPhotoset> response) {
       Log.d(FlickrAlbumRetriever.class.getSimpleName(), "retrieved photoset");
       FlickrPhotoset body = response.body();
-      SinglePhotoset photoset = body != null ? body.getPhotoset() : null;
-      Album album = mapAlbum(photoset);
-      realmFlickrAlbumPersister.updateFullAlbum(album);
-      onAlbumRetrievedListener.onAlbumRetrieved(album);
+      if (body != null) {
+        Album album = mapAlbum(body.getPhotoset());
+        realmFlickrAlbumPersister.updateFullAlbum(album);
+        onAlbumRetrievedListener.onAlbumRetrieved(album);
+      }
     }
 
     @Override

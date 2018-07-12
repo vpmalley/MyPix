@@ -10,6 +10,6 @@ import retrofit2.http.Query;
  */
 
 public interface FlickrPhotosService {
-  @GET("?method=flickr.people.getPublicPhotos&extras=url_s%2Curl_o")
+  @GET("?method=flickr.people.getPublicPhotos&extras=url_s%2Curl_m%2Curl_o")
   Call<FlickrPhotos> listAlbums(@Query("user_id") String userId);
 }
