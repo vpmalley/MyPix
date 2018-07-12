@@ -38,7 +38,7 @@ public class FlickrAlbumsRetrievalService extends IntentService implements Local
             Retrofit flickrRetrofit = new FlickrRetrofit().getFlickrRetrofit(this);
             flickrAlbumsRetriever = new FlickrAlbumsRetriever(flickrRetrofit, this);
         }
-        flickrAlbumsRetriever.getFlickrAlbums(this);
+        flickrAlbumsRetriever.forceGetFlickrAlbums(this);
     }
 
     private void showSynchroNotification() {

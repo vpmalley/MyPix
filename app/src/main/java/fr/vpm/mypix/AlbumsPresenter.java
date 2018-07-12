@@ -36,7 +36,7 @@ public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedLi
     this.context = context;
 
     allAlbums.clear();
-    //flickrAlbumsRetriever.getFlickrAlbums(this);
+    flickrAlbumsRetriever.getFlickrAlbums(this);
     synchroniseAlbums((Activity) context);
     localAlbumsRetriever.getLocalAlbums(context, this);
   }

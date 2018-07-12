@@ -53,10 +53,12 @@ public class FlickrAlbumsRetriever {
     List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
     if (albums != null && !albums.isEmpty()) {
       onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
-    } else {
-      FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
-      service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(onAlbumsRetrievedListener));
     }
+  }
+
+  public void forceGetFlickrAlbums(LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
+    FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
+    service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(onAlbumsRetrievedListener));
   }
 
   private static class FlickrPhotosetsCallback implements Callback<FlickrPhotosets> {
