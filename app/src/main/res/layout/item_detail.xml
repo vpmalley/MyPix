@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                                        xmlns:tools="http://schemas.android.com/tools"
-                                        android:id="@+id/item_detail"
-                                        android:name="fr.vpm.mypix.ItemListFragment"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        app:layoutManager="android.support.v7.widget.GridLayoutManager"
-                                        tools:context="fr.vpm.mypix.AlbumActivity"
-                                        android:paddingBottom="64dp"
-                                        tools:listitem="@layout/item_list_content"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_detail"
+    android:name="fr.vpm.mypix.ItemDetailFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="64dp"
+    app:layoutManager="android.support.v7.widget.GridLayoutManager"
+    app:spanCount="2"
+    tools:context="fr.vpm.mypix.AlbumActivity"
+    tools:listitem="@layout/item_detail_content" />
