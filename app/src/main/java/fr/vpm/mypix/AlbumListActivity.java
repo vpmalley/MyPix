@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,24 @@ public class AlbumListActivity extends AppCompatActivity {
     recyclerView = findViewById(R.id.item_list);
     setupRecyclerView(recyclerView);
     albumsPresenter.loadAlbums(this);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_album_list, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.refresh:
+        albumsPresenter.refreshFlickrAlbums(this);
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   private void setupRecyclerView(@NonNull RecyclerView recyclerView) {

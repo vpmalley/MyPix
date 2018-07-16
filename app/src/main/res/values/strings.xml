@@ -15,4 +15,5 @@
     <string name="snackbar_pictures_deleted">Your pictures were deleted.</string>
     <string name="notif_synchro_flickr">Synchronising with Flickr</string>
     <string name="notif_synchro_flickr_message">MyPix is synchronising your albums with Flickr</string>
+    <string name="refresh">Refresh</string>
 </resources>

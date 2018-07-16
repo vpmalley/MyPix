@@ -37,11 +37,10 @@ public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedLi
 
     allAlbums.clear();
     flickrAlbumsRetriever.getFlickrAlbums(this);
-    synchroniseAlbums((Activity) context);
     localAlbumsRetriever.getLocalAlbums(context, this);
   }
 
-  private void synchroniseAlbums(Activity activity) {
+  void refreshFlickrAlbums(Activity activity) {
     Intent flickrSynchroIntent = new Intent(activity, FlickrAlbumsRetrievalService.class);
     activity.startService(flickrSynchroIntent);
   }
