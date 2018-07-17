@@ -28,8 +28,16 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     @Override
     public boolean onLongClick(View view) {
       Picture picture = (Picture) view.getTag();
-      onLongClick.onLongClick(view, picture);
-      return true;
+      if (selectedPictures.isEmpty()) {
+        actionModeManager.startActionMode();
+        selectedPictures.add(picture);
+        notifyDataSetChanged();
+        actionModeManager.onSelectedItemsChanged(selectedPictures);
+        return true;
+      } else {
+        onLongClick.onLongClick(view, picture);
+        return true;
+      }
     }
   };
   private List<Picture> mPictures;
@@ -37,20 +45,29 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
   private final View.OnClickListener onPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-      Picture picture = (Picture) view.getTag();
-      if (selectedPictures.contains(picture)) {
-        selectedPictures.remove(picture);
+      if (!selectedPictures.isEmpty()) {
+        Picture picture = (Picture) view.getTag();
+        if (selectedPictures.contains(picture)) {
+          selectedPictures.remove(picture);
+          if (selectedPictures.isEmpty()) {
+            actionModeManager.endActionMode();
+          }
+        } else {
+          selectedPictures.add(picture);
+        }
+        notifyDataSetChanged();
+        actionModeManager.onSelectedItemsChanged(selectedPictures);
       } else {
-        selectedPictures.add(picture);
+        onSelectedPicture.selectedPicture();
       }
-      notifyDataSetChanged();
-      onSelectedPicture.selectedPicture();
     }
   };
+  private final ActionModeManager actionModeManager;
 
-  PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture, OnLongClick onLongClickListener) {
+  PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture, OnLongClick onLongClickListener, ActionModeManager actionModeManager) {
     this.onSelectedPicture = onSelectedPicture;
     this.onLongClick = onLongClickListener;
+    this.actionModeManager = actionModeManager;
     this.mPictures = new ArrayList<>();
     this.selectedPictures = new ArrayList<>();
   }

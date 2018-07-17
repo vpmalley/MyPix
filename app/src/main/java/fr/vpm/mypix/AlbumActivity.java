@@ -1,12 +1,12 @@
 package fr.vpm.mypix;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
  * item details are presented side-by-side with a list of items
  * in a {@link AlbumListActivity}.
  */
-public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetriever.OnAlbumRetrievedListener {
+public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetriever.OnAlbumRetrievedListener, ActionModeManager {
 
   public static final String ARG_ALBUMS = "albums";
 
@@ -46,6 +46,7 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
   private SharePicturesWithDialog sharePicturesWithDialog;
   private DeletePicturesWithDialog deletePicturesWithDialog;
   private CollapsingToolbarLayout appBarLayout;
+  private ActionMode actionMode;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +78,8 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
   private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
     CoordinatorLayout coordinatorLayout = findViewById(R.id.container);
     ImageView expandedImageView = findViewById(R.id.expanded_image_view);
-    recyclerView.setAdapter(new PicturesRecyclerViewAdapter(this::invalidateOptionsMenu,
-        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, coordinatorLayout, picture)));
+    recyclerView.setAdapter(new PicturesRecyclerViewAdapter(null,
+        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, coordinatorLayout, picture), this));
   }
 
   private void loadAlbum(List<ParcelableAlbum> albums) {
@@ -97,59 +98,6 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
     }
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.menu_album, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-    int selectedPicturesCount = ((PicturesRecyclerViewAdapter) recyclerView.getAdapter()).getSelectedPictures().size();
-    if (selectedPicturesCount == 2) {
-      menu.findItem(R.id.compare).setVisible(true);
-    } else {
-      menu.findItem(R.id.compare).setVisible(false);
-    }
-    if (selectedPicturesCount > 0) {
-      menu.findItem(R.id.delete).setVisible(true);
-      menu.findItem(R.id.share).setVisible(true);
-    } else {
-      menu.findItem(R.id.delete).setVisible(false);
-      menu.findItem(R.id.share).setVisible(false);
-    }
-    return false;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    List<Picture> selectedPictures = ((PicturesRecyclerViewAdapter) recyclerView.getAdapter()).getSelectedPictures();
-    switch (item.getItemId()) {
-      case R.id.compare:
-        if (selectedPictures.size() == 2) {
-          PicturesComparisonActivity.start(this, selectedPictures.get(0), selectedPictures.get(1));
-        }
-        return true;
-      case R.id.share:
-        if (selectedPictures.size() == 1) {
-          sharePicturesWithDialog.sharePicture(this, selectedPictures.get(0));
-        }
-        return true;
-      case R.id.delete:
-        if (!selectedPictures.isEmpty()) {
-          deletePicturesWithDialog.deletePictures(recyclerView, selectedPictures, null);
-        }
-        return true;
-      case R.id.home:
-        navigateUpTo(new Intent(this, AlbumListActivity.class));
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
-  }
-
   public void onAlbumRetrieved(final Album album) {
     if (appBarLayout != null) {
       appBarLayout.setTitle(album.getName());
@@ -160,5 +108,67 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
     Collections.sort(allPictures, (pic1, pic2) -> pic1.getFileName().compareTo(pic2.getFileName()));
     adapter.setPictures(allPictures);
     adapter.notifyDataSetChanged();
+  }
+
+  public void startActionMode() {
+    actionMode = startSupportActionMode(new PicturesActionModeCallback());
+  }
+
+  public void endActionMode() {
+    actionMode.finish();
+  }
+
+  @Override
+  public void onSelectedItemsChanged(List<Picture> selectedPictures) {
+    if (actionMode != null) {
+      final String selectedItemsCountLabel = getResources().getQuantityString(R.plurals.selected_items_count, selectedPictures.size(), selectedPictures.size());
+      this.actionMode.setTitle(selectedItemsCountLabel);
+    }
+  }
+
+  public static class PicturesActionModeCallback implements ActionMode.Callback {
+
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+      MenuInflater inflater = mode.getMenuInflater();
+      inflater.inflate(R.menu.menu_album, menu);
+      return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+      // TODO : handle the compare action
+      return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+      switch (item.getItemId()) {
+        case R.id.compare:
+          /*
+          if (selectedPictures.size() == 2) {
+            PicturesComparisonActivity.start(this, selectedPictures.get(0), selectedPictures.get(1));
+          }
+          return true;
+        case R.id.share:
+          if (selectedPictures.size() == 1) {
+            sharePicturesWithDialog.sharePicture(this, selectedPictures.get(0));
+          }
+          return true;
+        case R.id.delete:
+          if (!selectedPictures.isEmpty()) {
+            deletePicturesWithDialog.deletePictures(recyclerView, selectedPictures, null);
+          }
+          */
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+      mode.finish();
+    }
   }
 }

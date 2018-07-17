@@ -75,7 +75,7 @@ public class AlbumFragment extends Fragment implements LocalAlbumRetriever.OnAlb
         getActivity().invalidateOptionsMenu();
       }
     },
-        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, container, picture)));
+        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, container, picture), (ActionModeManager) getActivity()));
     picturesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
     loadAlbum();
     return rootView;

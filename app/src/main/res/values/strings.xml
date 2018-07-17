@@ -16,4 +16,8 @@
     <string name="notif_synchro_flickr">Synchronising with Flickr</string>
     <string name="notif_synchro_flickr_message">MyPix is synchronising your albums with Flickr</string>
     <string name="refresh">Refresh</string>
+    <plurals name="selected_items_count">
+        <item quantity="one">%1$s selected</item>
+        <item quantity="other">%1$s selected</item>
+    </plurals>
 </resources>
