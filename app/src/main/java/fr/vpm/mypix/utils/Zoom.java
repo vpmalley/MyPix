@@ -35,7 +35,7 @@ public class Zoom {
           .into(expandedImageView);
     } else if (picture instanceof PictureWithUrl) {
       Glide.with(expandedImageView)
-          .load(((PictureWithUrl) picture).getUrl())
+          .load(((PictureWithUrl) picture).getOriginalUrl())
           .apply(RequestOptions.centerCropTransform())
           .into(expandedImageView);
     }

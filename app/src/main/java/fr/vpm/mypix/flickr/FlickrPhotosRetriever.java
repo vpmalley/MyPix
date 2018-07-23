@@ -32,7 +32,7 @@ public class FlickrPhotosRetriever {
   private static List<FlickrPicture> mapPictures(List<Photo> photos) {
     List<FlickrPicture> flickrPictures = new ArrayList<>();
     for (Photo photo : photos) {
-      FlickrPicture picture = new FlickrPicture(photo.getUrl_s(), photo.getUrl_o(), photo.getTitle());
+      FlickrPicture picture = new FlickrPicture(photo.getUrl_s(), photo.getUrl_m(), photo.getUrl_o(), photo.getTitle());
       flickrPictures.add(picture);
     }
     return flickrPictures;

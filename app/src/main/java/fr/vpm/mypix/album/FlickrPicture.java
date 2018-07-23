@@ -11,20 +11,26 @@ import io.realm.RealmObject;
 public class FlickrPicture extends RealmObject implements PictureWithUrl {
 
   private String urlSmall;
+  private String urlMedium;
   private String urlOriginal;
   private String displayName;
 
   public FlickrPicture() {
   }
 
-  public FlickrPicture(String urlSmall, String urlOriginal, String displayName) {
+  public FlickrPicture(String urlSmall, String urlMedium, String urlOriginal, String displayName) {
     this.urlSmall = urlSmall;
+    this.urlMedium = urlMedium;
     this.urlOriginal = urlOriginal;
     this.displayName = displayName;
   }
 
   public String getUrlSmall() {
     return urlSmall;
+  }
+
+  public String getUrlMedium() {
+    return urlMedium;
   }
 
   public String getUrlOriginal() {
@@ -36,8 +42,18 @@ public class FlickrPicture extends RealmObject implements PictureWithUrl {
   }
 
   @Override
-  public String getUrl() {
+  public String getThumbnailUrl() {
     return urlSmall;
+  }
+
+  @Override
+  public String getAlbumThumbnailUrl() {
+    return urlMedium;
+  }
+
+  @Override
+  public String getOriginalUrl() {
+    return urlOriginal;
   }
 
   @NonNull

@@ -95,7 +95,7 @@ public class AlbumRecyclerViewAdapter
             .into(holder.albumPictureView);
       } else if (albumCover instanceof PictureWithUrl) {
         Glide.with(holder.albumPictureView)
-            .load(((PictureWithUrl) albumCover).getUrl())
+            .load(((PictureWithUrl) albumCover).getAlbumThumbnailUrl())
             .apply(RequestOptions.centerCropTransform())
             .into(holder.albumPictureView);
       }

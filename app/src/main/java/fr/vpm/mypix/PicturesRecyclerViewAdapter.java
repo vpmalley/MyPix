@@ -94,7 +94,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
           .into(holder.pictureDisplay);
     } else if (picture instanceof PictureWithUrl) {
       Glide.with(holder.pictureDisplay)
-          .load(((PictureWithUrl) picture).getUrl())
+          .load(((PictureWithUrl) picture).getThumbnailUrl())
           .apply(RequestOptions.centerCropTransform())
           .into(holder.pictureDisplay);
     }

@@ -41,12 +41,12 @@ public class PicturesComparisonActivity extends AppCompatActivity {
     if (picture1 instanceof PictureWithUri) {
       intent.putExtra(ARG_PICTURE1_URI, ((PictureWithUri) picture1).getUri());
     } else if (picture1 instanceof PictureWithUrl) {
-      intent.putExtra(ARG_PICTURE1_URL, ((PictureWithUrl) picture1).getUrl());
+      intent.putExtra(ARG_PICTURE1_URL, ((PictureWithUrl) picture1).getOriginalUrl());
     }
     if (picture2 instanceof PictureWithUri) {
       intent.putExtra(ARG_PICTURE2_URI, ((PictureWithUri) picture2).getUri());
     } else if (picture2 instanceof PictureWithUrl) {
-      intent.putExtra(ARG_PICTURE2_URL, ((PictureWithUrl) picture2).getUrl());
+      intent.putExtra(ARG_PICTURE2_URL, ((PictureWithUrl) picture2).getOriginalUrl());
     }
     context.startActivity(intent);
   }
