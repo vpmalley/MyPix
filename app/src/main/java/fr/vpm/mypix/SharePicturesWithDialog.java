@@ -2,15 +2,20 @@ package fr.vpm.mypix;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;
 
 public class SharePicturesWithDialog {
 
-  void sharePicture(Context context, Picture picture) {
+  void sharePicture(View snackbarContainerView, Context context, Picture picture) {
     if (picture instanceof PictureWithUri) {
       sharePictureWithUri(context, (PictureWithUri) picture);
+    } else {
+
+      Snackbar.make(snackbarContainerView, R.string.snackbar_pictures_cant_be_shared, Snackbar.LENGTH_SHORT).show();
     }
   }
 

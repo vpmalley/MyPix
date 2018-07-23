@@ -163,7 +163,7 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
           return true;
         case R.id.share:
           if (selectedPictures.size() == 1) {
-            sharePicturesWithDialog.sharePicture(context, selectedPictures.get(0));
+            sharePicturesWithDialog.sharePicture(snackbarContainerView, context, selectedPictures.get(0));
           }
           return true;
         case R.id.delete:

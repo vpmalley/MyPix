@@ -116,7 +116,7 @@ public class AlbumFragment extends Fragment implements LocalAlbumRetriever.OnAlb
         return true;
       case R.id.share:
         if (selectedPictures.size() == 1) {
-          sharePicturesWithDialog.sharePicture(getContext(), selectedPictures.get(0));
+          sharePicturesWithDialog.sharePicture(picturesRecyclerView, getContext(), selectedPictures.get(0));
         }
         return true;
       case R.id.delete:
