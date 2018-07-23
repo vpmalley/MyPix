@@ -21,7 +21,9 @@ public class DeletePicturesWithDialog {
         .setNegativeButton(R.string.all_cancel, null)
         .setPositiveButton(R.string.all_ok, (dialog, which) -> {
           deletePicturesForGood(view.getContext(), pictures);
-          onPicturesDeleted.onPicturesDeleted();
+          if (onPicturesDeleted != null) {
+            onPicturesDeleted.onPicturesDeleted();
+          }
           Snackbar.make(view, R.string.snackbar_pictures_deleted, Snackbar.LENGTH_SHORT).show();
         })
         .create().show();
