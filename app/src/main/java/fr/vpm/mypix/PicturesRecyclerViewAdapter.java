@@ -22,7 +22,6 @@ import fr.vpm.mypix.album.PictureWithUrl;
 
 public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRecyclerViewAdapter.ViewHolder> {
 
-  private final OnSelectedPicture onSelectedPicture;
   private final OnLongClick onLongClick;
   private final View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
     @Override
@@ -34,14 +33,14 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         notifyDataSetChanged();
         actionModeManager.onSelectedItemsChanged(selectedPictures);
         return true;
-      } else {
+      } else if (onLongClick != null) {
         onLongClick.onLongClick(view, picture);
         return true;
       }
+      return false;
     }
   };
-  private List<Picture> mPictures;
-  private List<Picture> selectedPictures;
+  private final OnClick onClick;
   private final View.OnClickListener onPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
@@ -57,15 +56,17 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         }
         notifyDataSetChanged();
         actionModeManager.onSelectedItemsChanged(selectedPictures);
-      } else if (onSelectedPicture != null) {
-        onSelectedPicture.selectedPicture();
+      } else if (onClick != null) {
+        onClick.onClick();
       }
     }
   };
   private final ActionModeManager actionModeManager;
+  private List<Picture> mPictures;
+  private List<Picture> selectedPictures;
 
-  PicturesRecyclerViewAdapter(OnSelectedPicture onSelectedPicture, OnLongClick onLongClickListener, ActionModeManager actionModeManager) {
-    this.onSelectedPicture = onSelectedPicture;
+  PicturesRecyclerViewAdapter(OnClick onClickListener, OnLongClick onLongClickListener, ActionModeManager actionModeManager) {
+    this.onClick = onClickListener;
     this.onLongClick = onLongClickListener;
     this.actionModeManager = actionModeManager;
     this.mPictures = new ArrayList<>();
@@ -147,8 +148,8 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
     void onLongClick(View view, Picture picture);
   }
 
-  interface OnSelectedPicture {
-    void selectedPicture();
+  interface OnClick {
+    void onClick();
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {
