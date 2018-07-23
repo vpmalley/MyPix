@@ -68,14 +68,13 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
       List<ParcelableAlbum> albums = getIntent().getParcelableArrayListExtra(ARG_ALBUMS);
       loadAlbum(albums);
     }
-
   }
 
   private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
     CoordinatorLayout coordinatorLayout = findViewById(R.id.container);
     ImageView expandedImageView = findViewById(R.id.expanded_image_view);
-    recyclerView.setAdapter(new PicturesRecyclerViewAdapter(null,
-        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, coordinatorLayout, picture), this));
+    recyclerView.setAdapter(new PicturesRecyclerViewAdapter(
+        (view, picture) -> new Zoom().zoomImageFromThumb(view, expandedImageView, coordinatorLayout, picture), null, null));
   }
 
   private void loadAlbum(List<ParcelableAlbum> albums) {

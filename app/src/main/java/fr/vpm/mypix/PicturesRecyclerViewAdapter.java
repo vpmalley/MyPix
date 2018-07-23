@@ -44,8 +44,8 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
   private final View.OnClickListener onPictureClickListener = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Picture picture = (Picture) view.getTag();
       if (!selectedPictures.isEmpty()) {
-        Picture picture = (Picture) view.getTag();
         if (selectedPictures.contains(picture)) {
           selectedPictures.remove(picture);
           if (selectedPictures.isEmpty()) {
@@ -57,7 +57,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         notifyDataSetChanged();
         actionModeManager.onSelectedItemsChanged(selectedPictures);
       } else if (onClick != null) {
-        onClick.onClick();
+        onClick.onClick(view, picture);
       }
     }
   };
@@ -149,7 +149,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
   }
 
   interface OnClick {
-    void onClick();
+    void onClick(View view, Picture picture);
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {

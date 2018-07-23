@@ -70,7 +70,7 @@ public class AlbumFragment extends Fragment implements LocalAlbumRetriever.OnAlb
     View rootView = inflater.inflate(R.layout.item_detail, container, false);
     picturesRecyclerView = rootView.findViewById(R.id.item_detail);
     ImageView expandedImageView = ((ViewGroup) container.getParent()).findViewById(R.id.expanded_image_view);
-    picturesRecyclerView.setAdapter(new PicturesRecyclerViewAdapter(() -> {
+    picturesRecyclerView.setAdapter(new PicturesRecyclerViewAdapter((view, picture) -> {
       if (getActivity() != null) {
         getActivity().invalidateOptionsMenu();
       }
