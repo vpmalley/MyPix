@@ -31,7 +31,7 @@ public class RealmFlickrAlbumPersister {
       if (existingAlbum == null) {
         realm.insert(latestFlickrAlbum);
       } else if (existingAlbum.getPicturesCount() != latestFlickrAlbum.getPicturesCount()) {
-        latestFlickrAlbum.deleteFromRealm();
+        existingAlbum.deleteFromRealm();
         realm.insert(latestFlickrAlbum);
       }
     }

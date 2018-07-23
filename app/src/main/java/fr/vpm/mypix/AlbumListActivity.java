@@ -2,6 +2,7 @@ package fr.vpm.mypix;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ public class AlbumListActivity extends AppCompatActivity {
    */
   private boolean mTwoPane;
   private RecyclerView recyclerView;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,10 @@ public class AlbumListActivity extends AppCompatActivity {
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     toolbar.setTitle(getTitle());
+
+    swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+    swipeRefreshLayout.setOnRefreshListener(() -> albumsPresenter.refreshFlickrAlbums(AlbumListActivity.this));
+    swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
 
     if (findViewById(R.id.item_detail_container) != null) {
       mTwoPane = true;
@@ -63,6 +69,7 @@ public class AlbumListActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.refresh:
+        swipeRefreshLayout.setRefreshing(true);
         albumsPresenter.refreshFlickrAlbums(this);
         return true;
       default:
@@ -75,6 +82,7 @@ public class AlbumListActivity extends AppCompatActivity {
   }
 
   public void onAlbumsLoaded(final List<AlbumDisplay> albums) {
+    swipeRefreshLayout.setRefreshing(false);
     AlbumRecyclerViewAdapter adapter = (AlbumRecyclerViewAdapter) recyclerView.getAdapter();
     adapter.setAlbums(albums);
     adapter.notifyDataSetChanged();
