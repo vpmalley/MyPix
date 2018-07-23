@@ -57,7 +57,7 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
         }
         notifyDataSetChanged();
         actionModeManager.onSelectedItemsChanged(selectedPictures);
-      } else {
+      } else if (onSelectedPicture != null) {
         onSelectedPicture.selectedPicture();
       }
     }
@@ -136,6 +136,11 @@ public class PicturesRecyclerViewAdapter extends RecyclerView.Adapter<PicturesRe
 
   public List<Picture> getSelectedPictures() {
     return selectedPictures;
+  }
+
+  public void clearSelectedPictures() {
+    selectedPictures.clear();
+    notifyDataSetChanged();
   }
 
   public interface OnLongClick {

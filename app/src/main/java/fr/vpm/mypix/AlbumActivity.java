@@ -1,5 +1,6 @@
 package fr.vpm.mypix;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -42,9 +44,6 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
   private List<Album> allAlbums = new ArrayList<>();
   private LocalAlbumRetriever localAlbumRetriever;
   private FlickrAlbumRetriever flickrAlbumRetriever;
-
-  private SharePicturesWithDialog sharePicturesWithDialog;
-  private DeletePicturesWithDialog deletePicturesWithDialog;
   private CollapsingToolbarLayout appBarLayout;
   private ActionMode actionMode;
 
@@ -64,9 +63,6 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
 
     recyclerView = findViewById(R.id.item_detail);
     setupRecyclerView(recyclerView);
-
-    sharePicturesWithDialog = new SharePicturesWithDialog();
-    deletePicturesWithDialog = new DeletePicturesWithDialog();
 
     if (getIntent().hasExtra(ARG_ALBUMS)) {
       List<ParcelableAlbum> albums = getIntent().getParcelableArrayListExtra(ARG_ALBUMS);
@@ -111,7 +107,7 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
   }
 
   public void startActionMode() {
-    actionMode = startSupportActionMode(new PicturesActionModeCallback());
+    actionMode = startSupportActionMode(new PicturesActionModeCallback(this, (PicturesRecyclerViewAdapter) recyclerView.getAdapter(), recyclerView));
   }
 
   public void endActionMode() {
@@ -128,6 +124,21 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
 
   public static class PicturesActionModeCallback implements ActionMode.Callback {
 
+    private SharePicturesWithDialog sharePicturesWithDialog;
+    private DeletePicturesWithDialog deletePicturesWithDialog;
+
+    private final Context context;
+    private final PicturesRecyclerViewAdapter adapter;
+    private View snackbarContainerView;
+
+    public PicturesActionModeCallback(Context context, PicturesRecyclerViewAdapter adapter, View snackbarContainerView) {
+      this.context = context;
+      this.adapter = adapter;
+      this.snackbarContainerView = snackbarContainerView;
+      this.sharePicturesWithDialog = new SharePicturesWithDialog();
+      this.deletePicturesWithDialog = new DeletePicturesWithDialog();
+    }
+
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
       MenuInflater inflater = mode.getMenuInflater();
@@ -143,23 +154,22 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+      final List<Picture> selectedPictures = adapter.getSelectedPictures();
       switch (item.getItemId()) {
         case R.id.compare:
-          /*
           if (selectedPictures.size() == 2) {
-            PicturesComparisonActivity.start(this, selectedPictures.get(0), selectedPictures.get(1));
+            PicturesComparisonActivity.start(context, selectedPictures.get(0), selectedPictures.get(1));
           }
           return true;
         case R.id.share:
           if (selectedPictures.size() == 1) {
-            sharePicturesWithDialog.sharePicture(this, selectedPictures.get(0));
+            sharePicturesWithDialog.sharePicture(context, selectedPictures.get(0));
           }
           return true;
         case R.id.delete:
           if (!selectedPictures.isEmpty()) {
-            deletePicturesWithDialog.deletePictures(recyclerView, selectedPictures, null);
+            deletePicturesWithDialog.deletePictures(snackbarContainerView, selectedPictures, null);
           }
-          */
           return true;
         default:
           return false;
@@ -169,6 +179,7 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
     @Override
     public void onDestroyActionMode(ActionMode mode) {
       mode.finish();
+      adapter.clearSelectedPictures();
     }
   }
 }
