@@ -19,6 +19,9 @@
     <string name="notif_synchro_flickr">Synchronising with Flickr</string>
     <string name="notif_synchro_flickr_message">MyPix is synchronising your albums with Flickr</string>
     <string name="refresh">Refresh</string>
+    <string name="album_list_permission_title">Permission request</string>
+    <string name="album_list_permission_message">Please let us access the pictures on your device.</string>
+    <string name="snackbar_album_list_permission_denied">We will not access your local pictures</string>
     <plurals name="selected_items_count">
         <item quantity="one">%1$s selected</item>
         <item quantity="other">%1$s selected</item>

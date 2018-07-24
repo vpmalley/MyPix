@@ -22,7 +22,7 @@ public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedLi
   private final LocalAlbumsRetriever localAlbumsRetriever;
   private final FlickrAlbumsRetriever flickrAlbumsRetriever;
   private List<Album> allAlbums = new ArrayList<>();
-  private Context context;
+  private AlbumListActivity albumListActivity;
 
   public AlbumsPresenter(final Context context) {
     localAlbumsRetriever = new LocalAlbumsRetriever();
@@ -30,15 +30,16 @@ public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedLi
     flickrAlbumsRetriever = new FlickrAlbumsRetriever(flickrRetrofit, context);
   }
 
-  void loadAlbums(Context context) {
-    this.context = context;
+  void loadAlbums(AlbumListActivity albumListActivity) {
+    this.albumListActivity = albumListActivity;
 
     allAlbums.clear();
     flickrAlbumsRetriever.getFlickrAlbums(this);
-    localAlbumsRetriever.getLocalAlbums(context, this);
+    localAlbumsRetriever.getLocalAlbums(albumListActivity, this);
   }
 
-  void refreshFlickrAlbums(Activity activity) {
+  void refreshFlickrAlbums(AlbumListActivity albumListActivity) {
+    this.albumListActivity = albumListActivity;
     flickrAlbumsRetriever.forceGetFlickrAlbums(this);
   }
 
@@ -47,7 +48,7 @@ public class AlbumsPresenter implements LocalAlbumsRetriever.OnAlbumsRetrievedLi
     Map<String, List<Album>> albumsByName = mapAlbumsByName(allAlbums);
     List<AlbumDisplay> albumDisplays = mapAlbumsToDisplays(albumsByName);
     Collections.sort(albumDisplays, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-    ((AlbumListActivity) context).onAlbumsLoaded(albumDisplays);
+    albumListActivity.onAlbumsLoaded(albumDisplays);
   }
 
   @NonNull
