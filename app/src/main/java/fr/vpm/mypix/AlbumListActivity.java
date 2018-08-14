@@ -1,6 +1,7 @@
 package fr.vpm.mypix;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -78,6 +79,10 @@ public class AlbumListActivity extends AppCompatActivity {
       case R.id.refresh:
         swipeRefreshLayout.setRefreshing(true);
         albumsPresenter.refreshFlickrAlbums(this);
+        return true;
+      case R.id.settings:
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
         return true;
       default:
         return super.onOptionsItemSelected(item);
