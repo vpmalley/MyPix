@@ -133,7 +133,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_frequency"))
-            bindPreferenceSummaryToValue(findPreference("sync_only_on_wifi"))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
