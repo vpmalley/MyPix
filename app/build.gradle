@@ -10,7 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "FLICKR_API_KEY", "\"" + System.getenv("FLICKR_API_KEY") + "\""
+        buildConfigField "String", "FLICKR_API_KEY", FLICKR_API_KEY // add the FLICKR_API_KEY pair to the app/gradle.properties file
     }
     buildTypes {
         release {
@@ -45,3 +45,13 @@ dependencies {
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+
+task printProps {
+    doLast {
+        println flickrApiKey
+        println orgGradleProjecvtFlickrApiKey
+        println System.properties['FLICKR_API_KEY']
+        println System.properties['ORG_GRADLE_PROJECT_FLICKR_API_KEY']
+    }
+}

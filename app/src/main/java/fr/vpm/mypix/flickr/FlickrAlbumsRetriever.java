@@ -27,64 +27,73 @@ import retrofit2.Retrofit;
 
 public class FlickrAlbumsRetriever {
 
-  private final Retrofit flickrRetrofit;
+    private final Retrofit flickrRetrofit;
 
-  private final Connection connection;
-  private RealmFlickrAlbumRetriever realmFlickrAlbumRetriever;
+    private final Connection connection;
+    private RealmFlickrAlbumRetriever realmFlickrAlbumRetriever;
 
-  public FlickrAlbumsRetriever(Retrofit flickrRetrofit, Context context) {
-    this.flickrRetrofit = flickrRetrofit;
-    this.connection = new Connection(context);
-    this.realmFlickrAlbumRetriever = new RealmFlickrAlbumRetriever();
-  }
-
-  @NonNull
-  private static ArrayList<Album> mapAlbums(List<Photoset> photosets) {
-    ArrayList<Album> albums = new ArrayList<>();
-    for (Photoset photoset : photosets) {
-      Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content(), Album.Source.FLICKR, photoset.getPhotos());
-      album.addPicture(new FlickrPicture(photoset.getPrimary_photo_extras().getUrl_s(), photoset.getPrimary_photo_extras().getUrl_m(), photoset.getPrimary_photo_extras().getUrl_o(), photoset.getTitle().get_content()));
-      albums.add(album);
-    }
-    return albums;
-  }
-
-  public void getFlickrAlbums(final LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
-    List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
-    if (albums != null && !albums.isEmpty()) {
-      onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
-    }
-  }
-
-  public void forceGetFlickrAlbums(LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
-    FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
-    service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(onAlbumsRetrievedListener));
-  }
-
-  private static class FlickrPhotosetsCallback implements Callback<FlickrPhotosets> {
-
-    private final LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener;
-
-    private final RealmFlickrAlbumPersister realmFlickrAlbumPersister;
-
-    FlickrPhotosetsCallback(LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
-      this.onAlbumsRetrievedListener = onAlbumsRetrievedListener;
-      realmFlickrAlbumPersister = new RealmFlickrAlbumPersister();
+    public FlickrAlbumsRetriever(Retrofit flickrRetrofit, Context context) {
+        this.flickrRetrofit = flickrRetrofit;
+        this.connection = new Connection(context);
+        this.realmFlickrAlbumRetriever = new RealmFlickrAlbumRetriever();
     }
 
-    @Override
-    public void onResponse(@NonNull Call<FlickrPhotosets> call, @NonNull Response<FlickrPhotosets> response) {
-      Log.d(FlickrAlbumsRetriever.class.getSimpleName(), "retrieved photosets");
-      FlickrPhotosets body = response.body();
-      List<Photoset> photosets = body != null && body.getPhotosets() != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
-      ArrayList<Album> albums = mapAlbums(photosets);
-      realmFlickrAlbumPersister.updateAlbumsWithCover(albums);
-      onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
+    @NonNull
+    private static ArrayList<Album> mapAlbums(List<Photoset> photosets) {
+        ArrayList<Album> albums = new ArrayList<>();
+        for (Photoset photoset : photosets) {
+            Album album = new Album(photoset.getId(), photoset.getTitle().get_content(), photoset.getDescription().get_content(), Album.Source.FLICKR, photoset.getPhotos());
+            album.addPicture(new FlickrPicture(photoset.getPrimary_photo_extras().getUrl_s(), photoset.getPrimary_photo_extras().getUrl_m(), photoset.getPrimary_photo_extras().getUrl_o(), photoset.getTitle().get_content()));
+            albums.add(album);
+        }
+        return albums;
     }
 
-    @Override
-    public void onFailure(@NonNull Call<FlickrPhotosets> call, @NonNull Throwable t) {
-      Log.d(FlickrAlbumsRetriever.class.getSimpleName(), "Failed retrieving photosets. " + t.toString());
+    public void getFlickrAlbums(final LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
+        List<Album> albums = realmFlickrAlbumRetriever.retrieveAllAlbums();
+        if (albums != null && !albums.isEmpty()) {
+            onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
+        }
     }
-  }
+
+    public void forceGetFlickrAlbums(LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
+        FlickrPhotosetsService service = flickrRetrofit.create(FlickrPhotosetsService.class);
+        service.listAlbums("107938954@N05").enqueue(new FlickrPhotosetsCallback(onAlbumsRetrievedListener));
+    }
+
+    private static class FlickrPhotosetsCallback implements Callback<FlickrPhotosets> {
+
+        private final LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener;
+
+        private final RealmFlickrAlbumPersister realmFlickrAlbumPersister;
+
+        FlickrPhotosetsCallback(LocalAlbumsRetriever.OnAlbumsRetrievedListener onAlbumsRetrievedListener) {
+            this.onAlbumsRetrievedListener = onAlbumsRetrievedListener;
+            realmFlickrAlbumPersister = new RealmFlickrAlbumPersister();
+        }
+
+        @Override
+        public void onResponse(@NonNull Call<FlickrPhotosets> call, @NonNull Response<FlickrPhotosets> response) {
+            FlickrPhotosets body = response.body();
+            List<Photoset> photosets = body != null && body.getPhotosets() != null ? body.getPhotosets().getPhotoset() : new ArrayList<>();
+            String logMsg = "retrieved ";
+            if (photosets != null) {
+                logMsg += photosets.size() + " photosets";
+            } else {
+                logMsg += "0 photosets";
+            }
+            if (body != null) {
+                logMsg += " with code " + body.getCode() + " and message " + body.getMessage();
+            }
+            Log.d(FlickrAlbumsRetriever.class.getSimpleName(), logMsg);
+            ArrayList<Album> albums = mapAlbums(photosets);
+            realmFlickrAlbumPersister.updateAlbumsWithCover(albums);
+            onAlbumsRetrievedListener.onAlbumsRetrieved(albums);
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<FlickrPhotosets> call, @NonNull Throwable t) {
+            Log.d(FlickrAlbumsRetriever.class.getSimpleName(), "Failed retrieving photosets. " + t.toString());
+        }
+    }
 }
