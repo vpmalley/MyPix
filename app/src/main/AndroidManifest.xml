@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.vpm.mypix">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".AlbumListActivity"
+            android:exported="true"
             android:label="@string/album_list_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,6 +22,7 @@
         </activity>
         <activity
             android:name=".AlbumActivity"
+            android:exported="false"
             android:label="@string/all_loading"
             android:launchMode="singleTop"
             android:parentActivityName=".AlbumListActivity"
@@ -37,6 +34,7 @@
         <activity
             android:name=".PicturesComparisonActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
             android:label="@string/title_activity_pictures_comparison"
             android:parentActivityName=".AlbumActivity"
             android:theme="@style/FullscreenTheme">
@@ -45,13 +43,19 @@
                 android:value="fr.vpm.mypix.AlbumActivity" />
         </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings"></activity>
+
         <service
             android:name=".flickr.FlickrAlbumsRetrievalService"
             android:exported="false" />
-
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
     </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

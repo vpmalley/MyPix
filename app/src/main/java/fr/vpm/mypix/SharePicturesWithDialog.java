@@ -2,8 +2,9 @@ package fr.vpm.mypix;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import fr.vpm.mypix.album.Picture;
 import fr.vpm.mypix.album.PictureWithUri;

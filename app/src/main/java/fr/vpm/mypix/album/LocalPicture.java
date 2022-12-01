@@ -3,7 +3,7 @@ package fr.vpm.mypix.album;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Date;
 

@@ -3,8 +3,9 @@ package fr.vpm.mypix;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 

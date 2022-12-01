@@ -1,6 +1,6 @@
 package fr.vpm.mypix.album;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import io.realm.RealmObject;
 

@@ -3,7 +3,7 @@ package fr.vpm.mypix.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class Connection {
 

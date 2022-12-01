@@ -3,8 +3,8 @@ package fr.vpm.mypix.flickr;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import java.util.List;
 
