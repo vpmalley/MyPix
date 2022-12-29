@@ -108,7 +108,7 @@ public class AlbumActivity extends AppCompatActivity implements LocalAlbumRetrie
         adapter.notifyDataSetChanged();
         ArrayList<Album> albums = new ArrayList<>();
         albums.add(album);
-        new FocalLengthLogger().logFocalLength(this, albums);
+        new FocalLengthLogger().extractExifInfo(this, albums);
     }
 
     public void startActionMode() {

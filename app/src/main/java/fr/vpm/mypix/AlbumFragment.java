@@ -160,7 +160,7 @@ public class AlbumFragment extends Fragment implements LocalAlbumRetriever.OnAlb
         adapter.notifyDataSetChanged();
         ArrayList<Album> albums = new ArrayList<>();
         albums.add(album);
-        new FocalLengthLogger().logFocalLength(getContext(), albums);
+        new FocalLengthLogger().extractExifInfo(getContext(), albums);
     }
 
 }

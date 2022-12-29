@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
+import fr.vpm.mypix.local.ExifInfo;
+
 /**
  * Created by vince on 26/02/18.
  */
@@ -81,7 +83,7 @@ public class LocalPicture implements PictureWithUri {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void logFocalLength(Context context) {
+    public ExifInfo extractExifInfo(Context context) {
         InputStream in = null;
         try {
             in = context.getContentResolver().openInputStream(getUri());
@@ -92,7 +94,7 @@ public class LocalPicture implements PictureWithUri {
             double focalLength = exifInterface.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0);
             int focalLength35 = exifInterface.getAttributeInt(ExifInterface.TAG_FOCAL_LENGTH_IN_35MM_FILM, 0);
             Log.d("ux-pic", "Picture " + getDisplayName() + " taken with " + device + " has focal length " + focalLength + " / " + focalLength35);
-
+            return new ExifInfo(make, model, focalLength, focalLength35);
         } catch (IOException e) {
             // Handle any errors
         } finally {
@@ -103,5 +105,6 @@ public class LocalPicture implements PictureWithUri {
                 }
             }
         }
+        return null;
     }
 }
