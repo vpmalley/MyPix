@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +23,11 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.vpm.mypix.album.Album;
 import fr.vpm.mypix.album.AlbumDisplay;
+import fr.vpm.mypix.local.ExifInfo;
+import fr.vpm.mypix.local.FocalLengthLogger;
+import fr.vpm.mypix.local.LocalAlbumRetriever;
 import io.realm.Realm;
 
 /**
@@ -33,10 +38,13 @@ import io.realm.Realm;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class AlbumListActivity extends AppCompatActivity {
+public class AlbumListActivity extends AppCompatActivity implements LocalAlbumRetriever.OnAlbumRetrievedListener {
 
     private static final int READ_STORAGE_PERMISSION_REQUEST = 101;
     private AlbumsPresenter albumsPresenter;
+    private final LocalAlbumRetriever localAlbumRetriever = new LocalAlbumRetriever();
+    private final FocalLengthLogger focalLengthLogger = new FocalLengthLogger();
+    private ArrayList<ExifInfo> exifInfo = new ArrayList<ExifInfo>();
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -141,5 +149,23 @@ public class AlbumListActivity extends AppCompatActivity {
 //            List<Album> allAlbums = albums.flatMap(albumDisplay -> albumDisplay.getAlbums())
 //            new FocalLengthLogger().logFocalLength(this, allAlbums);
 //        }
+        exifInfo = new ArrayList<>();
+        for (AlbumDisplay albumDisplay : albums) {
+            List<Album> subAlbums = albumDisplay.getAlbums();
+            for (Album album : subAlbums) {
+                if (Album.Source.LOCAL == album.getSource()) {
+                    localAlbumRetriever.getLocalAlbum(this, this, album.getId());
+                }
+            }
+        }
+        Log.d("ux-pic", "Extracted " + exifInfo.size() + " exif info");
+
+    }
+
+    @Override
+    public void onAlbumRetrieved(Album album) {
+        ArrayList<Album> albums = new ArrayList<>();
+        albums.add(album);
+        exifInfo.addAll(focalLengthLogger.extractExifInfo(this, albums));
     }
 }
