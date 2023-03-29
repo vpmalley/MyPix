@@ -84,9 +84,7 @@ public class LocalPicture implements PictureWithUri {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ExifInfo extractExifInfo(Context context) {
-        InputStream in = null;
-        try {
-            in = context.getContentResolver().openInputStream(getUri());
+        try (InputStream in = context.getContentResolver().openInputStream(getUri())) {
             ExifInterface exifInterface = new ExifInterface(in);
             String make = exifInterface.getAttribute(ExifInterface.TAG_MAKE);
             String model = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
@@ -94,16 +92,9 @@ public class LocalPicture implements PictureWithUri {
             double focalLength = exifInterface.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0);
             int focalLength35 = exifInterface.getAttributeInt(ExifInterface.TAG_FOCAL_LENGTH_IN_35MM_FILM, 0);
             Log.d("ux-pic", "Picture " + getDisplayName() + " taken with " + device + " has focal length " + focalLength + " / " + focalLength35);
-            return new ExifInfo(make, model, focalLength, focalLength35);
+            return new ExifInfo(getFileName(), getExtension(), make, model, focalLength, focalLength35);
         } catch (IOException e) {
             // Handle any errors
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ignored) {
-                }
-            }
         }
         return null;
     }

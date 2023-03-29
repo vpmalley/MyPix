@@ -28,6 +28,7 @@ import fr.vpm.mypix.album.AlbumDisplay;
 import fr.vpm.mypix.local.ExifInfo;
 import fr.vpm.mypix.local.FocalLengthLogger;
 import fr.vpm.mypix.local.LocalAlbumRetriever;
+import fr.vpm.mypix.utils.CsvWriter;
 import io.realm.Realm;
 
 /**
@@ -149,16 +150,24 @@ public class AlbumListActivity extends AppCompatActivity implements LocalAlbumRe
 //            List<Album> allAlbums = albums.flatMap(albumDisplay -> albumDisplay.getAlbums())
 //            new FocalLengthLogger().logFocalLength(this, allAlbums);
 //        }
-        exifInfo = new ArrayList<>();
-        for (AlbumDisplay albumDisplay : albums) {
-            List<Album> subAlbums = albumDisplay.getAlbums();
-            for (Album album : subAlbums) {
-                if (Album.Source.LOCAL == album.getSource()) {
-                    localAlbumRetriever.getLocalAlbum(this, this, album.getId());
+        new Thread(() -> {
+            exifInfo = new ArrayList<>();
+            Log.d("ux-pic", "Started extracting exif info of " + albums.size() + " albums");
+            for (
+                    AlbumDisplay albumDisplay : albums) {
+                List<Album> subAlbums = albumDisplay.getAlbums();
+                for (Album album : subAlbums) {
+                    if (Album.Source.LOCAL == album.getSource()) {
+                        Log.d("ux-pic", "For album " + album.getName());
+                        localAlbumRetriever.getLocalAlbum(AlbumListActivity.this, AlbumListActivity.this, album.getId());
+                    }
                 }
             }
-        }
-        Log.d("ux-pic", "Extracted " + exifInfo.size() + " exif info");
+            Log.d("ux-pic", "Extracted exif info of " + exifInfo.size() + " photos");
+            CsvWriter csvBuilder = new CsvWriter();
+            csvBuilder.write(this, exifInfo);
+            Log.d("ux-pic", "Built CSV of all these EXIF info");
+        }, "exif").start();
 
     }
 
@@ -166,6 +175,7 @@ public class AlbumListActivity extends AppCompatActivity implements LocalAlbumRe
     public void onAlbumRetrieved(Album album) {
         ArrayList<Album> albums = new ArrayList<>();
         albums.add(album);
+        Log.d("ux-pic", "Got album " + album.getName());
         exifInfo.addAll(focalLengthLogger.extractExifInfo(this, albums));
     }
 }
